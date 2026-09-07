@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>👑 SoundManager — Demonstração de Síntese Procedural Web Audio API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --primary-gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --pink-soft: #f472b6;
+      --blue-celestial: #38bdf8;
+      --emerald-soft: #34d399;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--gold-light);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.65rem;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* Osciloscópio / Visualizador */
+    .visualizer-card {
+      background: #090d16;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .visualizer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0 0.25rem;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      margin-right: 0.35rem;
+      transition: background 0.3s;
+    }
+    .status-dot.active {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    canvas#oscilloscope {
+      width: 100%;
+      height: 70px;
+      background: transparent;
+      border-radius: 8px;
+    }
+
+    /* Painel de Controles */
+    .sound-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    .sound-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sound-card:hover {
+      border-color: rgba(245, 158, 11, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .sound-card:active {
+      transform: scale(0.96);
+      border-color: var(--primary-gold);
+    }
+
+    .sound-card.full-width {
+      grid-column: span 2;
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+      padding: 1.1rem 1.25rem;
+    }
+
+    .sound-icon {
+      font-size: 2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .sound-card.full-width .sound-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0;
+      margin-right: 1rem;
+    }
+
+    .sound-title {
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .sound-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* Painel de Música Ambiente */
+    .ambient-panel {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 18px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .ambient-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ambient-toggle-btn {
+      background: var(--primary-gold);
+      color: #0f172a;
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .ambient-toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .ambient-toggle-btn.playing {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Controles de Volume */
+    .sliders-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .slider-label {
+      min-width: 110px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--primary-gold);
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .log-box {
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: var(--emerald-soft);
+      max-height: 90px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">✨ 100% Procedural Web Audio</div>
+      <h1>SoundManager</h1>
+      <p class="subtitle">Síntese sonora em tempo real para o jogo de quadrinhos interativo "A Princesa e a Coroa Perdida".</p>
+    </header>
+
+    <!-- Visualizador de Áudio em Tempo Real -->
+    <div class="visualizer-card">
+      <div class="visualizer-header">
+        <span><span class="status-dot" id="status-dot"></span><span id="audio-status">AudioContext: Aguardando gesto</span></span>
+        <span id="dsp-load">DSP: 0 buffers externos</span>
+      </div>
+      <canvas id="oscilloscope" width="480" height="70"></canvas>
+    </div>
+
+    <!-- Grade de Efeitos Sonoros -->
+    <div class="sound-grid">
+      <!-- 1. Folhear Página -->
+      <div class="sound-card" id="btn-page-turn">
+        <div class="sound-icon">📖</div>
+        <div class="sound-title">1. Virar Página</div>
+        <div class="sound-desc">playPageTurn()<br/>Ruído branco + filtro BPF rápido</div>
+      </div>
+
+      <!-- 2. Sparkle / Sino Mágico -->
+      <div class="sound-card" id="btn-sparkle">
+        <div class="sound-icon">✨</div>
+        <div class="sound-title">2. Sino Mágico</div>
+        <div class="sound-desc">playSparkle()<br/>Arpejo senoidal celeste C6-G7</div>
+      </div>
+
+      <!-- 3. Pop / Bubble -->
+      <div class="sound-card" id="btn-pop">
+        <div class="sound-icon">🫧</div>
+        <div class="sound-title">3. Estalo Tátil</div>
+        <div class="sound-desc">playPop()<br/>Sweep senoidal rápido 720Hz-180Hz</div>
+      </div>
+
+      <!-- 4. Boing / Mola Elástica -->
+      <div class="sound-card" id="btn-boing">
+        <div class="sound-icon">🌀</div>
+        <div class="sound-title">4. Mola Boing</div>
+        <div class="sound-desc">playBoing()<br/>Oscilador triangular + FM LFO</div>
+      </div>
+
+      <!-- 5. Trava Mecânica / Cofre -->
+      <div class="sound-card full-width" id="btn-lock">
+        <div class="sound-icon">🔐</div>
+        <div>
+          <div class="sound-title">5. Destravar Cofre / Fechadura</div>
+          <div class="sound-desc">playLockUnlock()<br/>Inserção da chave + giro de latão + disparo de trinco ressonante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Trilha Ambiente Procedural -->
+    <div class="ambient-panel">
+      <div class="ambient-header">
+        <div>
+          <div class="sound-title" style="color: var(--gold-light);">🎼 6. Trilha Sonora Procedural</div>
+          <div class="sound-desc">Caixinha de música & piano mágico (Cmaj9 - Am9 - Fmaj7)</div>
+        </div>
+        <button class="ambient-toggle-btn" id="btn-ambient-toggle">
+          <span id="ambient-btn-icon">▶</span> <span id="ambient-btn-text">Iniciar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Painel de Sliders de Volume -->
+    <div class="sliders-panel">
+      <div class="slider-row">
+        <span class="slider-label">Volume Geral:</span>
+        <input type="range" id="slider-master" min="0" max="1" step="0.05" value="0.8">
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Volume SFX:</span>
+        <input type="range" id="slider-sfx" min="0" max="1" step="0.05" value="0.85">
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Volume Música:</span>
+        <input type="range" id="slider-ambient" min="0" max="1" step="0.05" value="0.45">
+      </div>
+    </div>
+
+    <!-- Log de Ações -->
+    <div class="log-box" id="action-log">
+      &gt; SoundManager pronto. Toque em qualquer botão para inicializar o áudio.
+    </div>
+  </div>
+
+  <script src="sound-manager.js"></script>
+  <script>
+    const soundManager = window.soundManager;
+
+    const logBox = document.getElementById('action-log');
+    const statusDot = document.getElementById('status-dot');
+    const audioStatus = document.getElementById('audio-status');
+    const canvas = document.getElementById('oscilloscope');
+    const canvasCtx = canvas.getContext('2d');
+
+    function log(msg) {
+      const time = new Date().toLocaleTimeString();
+      logBox.innerHTML = `&gt; [${time}] ${msg}<br>` + logBox.innerHTML;
+    }
+
+    function updateAudioStatus() {
+      if (soundManager.ctx && soundManager.ctx.state === 'running') {
+        statusDot.classList.add('active');
+        audioStatus.textContent = `AudioContext: Ativo (${soundManager.ctx.sampleRate} Hz)`;
+      }
+    }
+
+    document.addEventListener('soundmanager:unlocked', () => {
+      updateAudioStatus();
+      log('🔊 AudioContext desbloqueado com sucesso pelo primeiro toque!');
+    });
+
+    // 1. Virar Página
+    document.getElementById('btn-page-turn').addEventListener('click', () => {
+      soundManager.playPageTurn();
+      updateAudioStatus();
+      log('📖 playPageTurn() sintetizado.');
+    });
+
+    // 2. Sparkle
+    document.getElementById('btn-sparkle').addEventListener('click', () => {
+      soundManager.playSparkle();
+      updateAudioStatus();
+      log('✨ playSparkle() arpejo celestial sintetizado.');
+    });
+
+    // 3. Pop
+    document.getElementById('btn-pop').addEventListener('click', () => {
+      soundManager.playPop();
+      updateAudioStatus();
+      log('🫧 playPop() estalo orgânico sintetizado.');
+    });
+
+    // 4. Boing
+    document.getElementById('btn-boing').addEventListener('click', () => {
+      soundManager.playBoing();
+      updateAudioStatus();
+      log('🌀 playBoing() mola elástica sintetizada.');
+    });
+
+    // 5. Cofre / Lock
+    document.getElementById('btn-lock').addEventListener('click', () => {
+      soundManager.playLockUnlock();
+      updateAudioStatus();
+      log('🔐 playLockUnlock() mecanismo de 3 fases sintetizado.');
+    });
+
+    // 6. Trilha Ambiente
+    const ambientBtn = document.getElementById('btn-ambient-toggle');
+    const ambientIcon = document.getElementById('ambient-btn-icon');
+    const ambientText = document.getElementById('ambient-btn-text');
+
+    ambientBtn.addEventListener('click', () => {
+      if (soundManager.ambientState.isPlaying) {
+        soundManager.stopCozyAmbient();
+        ambientBtn.classList.remove('playing');
+        ambientIcon.textContent = '▶';
+        ambientText.textContent = 'Iniciar';
+        log('⏸ Trilha ambiente em fade-out.');
+      } else {
+        soundManager.startCozyAmbient({ bpm: 52 });
+        ambientBtn.classList.add('playing');
+        ambientIcon.textContent = '⏹';
+        ambientText.textContent = 'Parar';
+        updateAudioStatus();
+        log('🎼 Trilha procedural iniciada (Caixinha de música relaxante).');
+      }
+    });
+
+    // Sliders de Volume
+    document.getElementById('slider-master').addEventListener('input', (e) => {
+      soundManager.setMasterVolume(parseFloat(e.target.value));
+    });
+
+    document.getElementById('slider-sfx').addEventListener('input', (e) => {
+      soundManager.setSfxVolume(parseFloat(e.target.value));
+    });
+
+    document.getElementById('slider-ambient').addEventListener('input', (e) => {
+      soundManager.setAmbientVolume(parseFloat(e.target.value));
+    });
+
+    // Animação do Osciloscópio
+    function drawVisualizer() {
+      requestAnimationFrame(drawVisualizer);
+
+      const width = canvas.width;
+      const height = canvas.height;
+      canvasCtx.clearRect(0, 0, width, height);
+
+      if (!soundManager.analyser) {
+        // Linha de repouso
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = '#334155';
+        canvasCtx.beginPath();
+        canvasCtx.moveTo(0, height / 2);
+        canvasCtx.lineTo(width, height / 2);
+        canvasCtx.stroke();
+        return;
+      }
+
+      const bufferLength = soundManager.analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      soundManager.analyser.getByteTimeDomainData(dataArray);
+
+      canvasCtx.lineWidth = 2.5;
+      canvasCtx.strokeStyle = '#fbbf24';
+      canvasCtx.beginPath();
+
+      const sliceWidth = width / bufferLength;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = (v * height) / 2;
+
+        if (i === 0) {
+          canvasCtx.moveTo(x, y);
+        } else {
+          canvasCtx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
+      }
+
+      canvasCtx.lineTo(width, height / 2);
+      canvasCtx.stroke();
+    }
+
+    drawVisualizer();
+  </script>
+</body>
+</html>

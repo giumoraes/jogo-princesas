@@ -1,0 +1,1211 @@
+/* ===================================================
+   A PRINCESA E A COROA PERDIDA - ESTILOS DO JOGO HQ
+   Visual Comic Book Infantil, Mobile-First (9:16)
+   Com Imagens Ilustradas & Sprites PNG Integrados
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Mali:wght@500;700&display=swap');
+
+:root {
+  --font-comic: 'Fredoka', 'Comic Neue', cursive, sans-serif;
+  --font-dialog: 'Mali', cursive, sans-serif;
+  
+  --color-bg-app: #1e1329;
+  --color-paper: #fffcf8;
+  --color-border: #2e1d3d;
+  --color-shadow: rgba(46, 29, 61, 0.28);
+  
+  --color-primary-pink: #ff6b97;
+  --color-soft-pink: #ffe4ee;
+  --color-gold: #ffc83b;
+  --color-gold-glow: rgba(255, 200, 59, 0.65);
+  --color-purple: #795290;
+  --color-sky-blue: #72c5ff;
+  --color-indigo: #1e1b4b;
+  --color-mint: #62d8b4;
+  --color-star-yellow: #ffe600;
+
+  --panel-radius: 22px;
+  --comic-border-width: 4px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #1a0f26;
+  background-image: 
+    radial-gradient(#341c4a 15%, transparent 16%),
+    radial-gradient(#452462 15%, transparent 16%);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  font-family: var(--font-comic);
+  color: var(--color-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+}
+
+/* ===================================================
+   MOLDURA / CONTAINER DO SMARTPHONE (9:16 Mobile First)
+   =================================================== */
+#comic-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 430px;
+  max-height: 880px;
+  background: var(--color-bg-app);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 0 10px #12091c;
+  border-radius: 36px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 480px) {
+  #comic-viewport {
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* Barra superior da HQ */
+.comic-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 52px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.98) 75%, rgba(255, 252, 248, 0));
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+.comic-title-badge {
+  background: #fff;
+  border: 3px solid var(--color-border);
+  border-radius: 18px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-purple);
+  box-shadow: 2px 2px 0 var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-crown-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sound-toggle-btn {
+  background: #fff;
+  border: 3px solid var(--color-border);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--color-border);
+  transition: transform 0.1s active;
+}
+
+.sound-toggle-btn:active {
+  transform: scale(0.92);
+}
+
+/* ===================================================
+   CONTAINER DE ROLAGEM DOS QUADROS (COMIC PANELS)
+   =================================================== */
+#comic-scroll-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 56px 12px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Estilo Base de Cada Quadro de Gibi */
+.comic-panel {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 30px);
+  min-height: calc(100% - 30px);
+  background: var(--color-paper);
+  border: var(--comic-border-width) solid var(--color-border);
+  border-radius: var(--panel-radius);
+  box-shadow: 4px 6px 0 var(--color-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.comic-panel.active-panel {
+  box-shadow: 6px 8px 0 var(--color-border), 0 0 24px rgba(255, 107, 151, 0.35);
+}
+
+/* Indicador de Número do Quadro (Estilo Gibi) */
+.panel-ribbon {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  background: var(--color-gold);
+  border: 2.5px solid var(--color-border);
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-border);
+  z-index: 25;
+  box-shadow: 2px 2px 0 var(--color-border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Fundo Ilustrado dos Painéis */
+.panel-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.panel-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.panel-bg-img.mirrored-bg {
+  transform: scaleX(-1);
+}
+
+.panel-light-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 240, 245, 0.15) 60%, rgba(30, 20, 45, 0.35) 100%);
+  pointer-events: none;
+}
+
+.panel-library-ambient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(24, 18, 55, 0.25) 0%, rgba(30, 27, 75, 0.35) 50%, rgba(15, 10, 30, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* ===================================================
+   BALÕES DE FALA & ONOMATOPEIAS
+   =================================================== */
+.speech-bubble {
+  position: absolute;
+  background: #ffffff;
+  border: 3px solid var(--color-border);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-family: var(--font-dialog);
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #2b173b;
+  box-shadow: 3px 3px 0 var(--color-border);
+  z-index: 30;
+  max-width: 82%;
+  animation: popInBubble 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: none;
+}
+
+.speech-bubble.bubble-princess {
+  top: 14px;
+  right: 14px;
+}
+
+.speech-bubble.bubble-princess::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  right: 32px;
+  border-width: 10px 10px 0 0;
+  border-style: solid;
+  border-color: #ffffff transparent;
+  display: block;
+  width: 0;
+  z-index: 2;
+}
+
+.speech-bubble.bubble-princess::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: 30px;
+  border-width: 13px 13px 0 0;
+  border-style: solid;
+  border-color: var(--color-border) transparent;
+  display: block;
+  width: 0;
+  z-index: 1;
+}
+
+@keyframes popInBubble {
+  0% { transform: scale(0.4) rotate(-5deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Onomatopeias Estilizadas */
+.onomatopoeia {
+  position: absolute;
+  font-family: var(--font-comic);
+  font-weight: 700;
+  font-size: 24px;
+  text-transform: uppercase;
+  color: var(--color-star-yellow);
+  -webkit-text-stroke: 1.5px var(--color-border);
+  text-shadow: 3px 3px 0 var(--color-border);
+  z-index: 50;
+  pointer-events: none;
+  animation: onomatoAnim 0.85s ease-out forwards;
+}
+
+@keyframes onomatoAnim {
+  0% { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+  40% { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  75% { transform: scale(1.1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.0) translateY(-14px); opacity: 0; }
+}
+
+/* ===================================================
+   QUADRO 1: O DESPERTAR REAL
+   =================================================== */
+.scene-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Gatinho Pip */
+.pet-cat-q1 {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+  width: 75px;
+  height: 75px;
+  z-index: 12;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pet-cat-q1:hover {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+.item-sprite-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 0 var(--color-shadow));
+}
+
+/* Cama Interativa */
+.bed-wrapper {
+  position: absolute;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  height: 200px;
+  z-index: 10;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  border: 3px dashed rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.zzz-floater {
+  position: absolute;
+  top: 15px;
+  left: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #8b60b2;
+  text-shadow: 1px 1px 0 #fff;
+  animation: floatZzz 2.2s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 20;
+}
+
+@keyframes floatZzz {
+  0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
+  50% { transform: translate(10px, -18px) scale(1.1); opacity: 1; }
+  100% { transform: translate(20px, -36px) scale(1.3); opacity: 0; }
+}
+
+.missing-crown-cushion {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 48px;
+  background: #805ad5;
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 3px 0 var(--color-border);
+  z-index: 12;
+}
+
+.cushion-halo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 18px;
+  border: 2px solid #ffd700;
+  animation: pulseHalo 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseHalo {
+  0% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 0.3; transform: scale(0.95); }
+}
+
+.missing-question {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 1px 1px 0 #2e1d3d;
+}
+
+/* Princesa Acordada no Quadro 1 */
+.princess-q1-awake {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 155px;
+  height: 230px;
+  z-index: 15;
+  display: none;
+  animation: jumpOutBed 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.princess-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(3px 4px 0 var(--color-shadow));
+}
+
+@keyframes jumpOutBed {
+  0% { transform: translate(-50%, 40px) scale(0.8); opacity: 0; }
+  70% { transform: translate(-50%, -15px) scale(1.05); }
+  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+/* ===================================================
+   QUADRO 2: O GUARDA-ROUPA REAL (PUZZLE DE VESTIR)
+   =================================================== */
+.wardrobe-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 10;
+}
+
+.wardrobe-container {
+  position: absolute;
+  top: 54px;
+  width: 92%;
+  height: 220px;
+  background: rgba(255, 252, 245, 0.92);
+  border: 4px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: 4px 6px 0 var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px;
+  z-index: 15;
+}
+
+.wardrobe-header-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 6px 0;
+  border-bottom: 2px dashed rgba(46, 29, 61, 0.2);
+}
+
+.wardrobe-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-purple);
+  text-transform: uppercase;
+}
+
+.dresses-rack {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 6px;
+  height: 135px;
+}
+
+.dress-item {
+  width: 85px;
+  height: 125px;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.dress-item:active {
+  cursor: grabbing;
+}
+
+.dress-sprite-img {
+  width: 100%;
+  height: 95px;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 0 var(--color-shadow));
+  pointer-events: none;
+}
+
+.dress-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1px 6px;
+  margin-top: 2px;
+  color: var(--color-border);
+  box-shadow: 1px 1px 0 var(--color-border);
+  pointer-events: none;
+}
+
+.dress-tag.real-tag {
+  background: var(--color-gold);
+  color: #2e1d3d;
+}
+
+.accessories-shelf {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 4px;
+  border-top: 2px solid rgba(46, 29, 61, 0.15);
+}
+
+.shelf-accessory {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.15));
+  opacity: 0.85;
+  transition: transform 0.2s ease;
+}
+
+.shelf-accessory:hover {
+  transform: scale(1.15) rotate(5deg);
+  opacity: 1;
+}
+
+/* Princesa no Quadro 2 (Área de Drop) */
+.princess-q2-container {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 155px;
+  height: 235px;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.princess-state-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.overlay-fitted-dress {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 0 10px rgba(255, 107, 151, 0.6));
+}
+
+.overlay-fitted-crown {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  z-index: 3;
+  animation: crownShine 2s infinite ease-in-out;
+}
+
+@keyframes crownShine {
+  0% { transform: translateX(-50%) scale(1) rotate(0deg); }
+  50% { transform: translateX(-50%) scale(1.1) rotate(3deg); filter: drop-shadow(0 0 12px #ffd700); }
+  100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+}
+
+.drop-target-halo {
+  position: absolute;
+  inset: -10px;
+  border-radius: 28px;
+  border: 3px dashed transparent;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.drop-target-halo.active-target {
+  border-color: var(--color-primary-pink);
+  background: rgba(255, 107, 151, 0.15);
+  animation: pulseHalo 1.2s infinite ease-in-out;
+}
+
+/* ===================================================
+   QUADRO 3: A PENTEADEIRA & A CHAVE ESCONDIDA
+   =================================================== */
+.vanity-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 10;
+}
+
+.vanity-furniture-box {
+  position: absolute;
+  bottom: 60px;
+  width: 250px;
+  height: 240px;
+  background: rgba(255, 252, 245, 0.85);
+  border: 4px solid var(--color-border);
+  border-radius: 24px;
+  box-shadow: 4px 6px 0 var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  z-index: 11;
+}
+
+.vanity-mirror-frame {
+  width: 110px;
+  height: 110px;
+  border: 4px solid var(--color-gold);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 60%, #ffffff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 3px 0 var(--color-border);
+}
+
+.mirror-sparkle {
+  font-size: 26px;
+  animation: pulseHalo 2s infinite;
+}
+
+.vanity-drawer {
+  width: 180px;
+  height: 60px;
+  background: #f59e0b;
+  border: 3px solid var(--color-border);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.drawer-lock-keyhole {
+  font-size: 24px;
+  filter: drop-shadow(1px 1px 0 #2e1d3d);
+}
+
+.pillow-wrapper {
+  position: absolute;
+  bottom: 80px;
+  right: 25px;
+  width: 90px;
+  height: 70px;
+  z-index: 15;
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pillow-cushion-visual {
+  width: 100%;
+  height: 100%;
+  background: #ec4899;
+  border: 3.5px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: 3px 4px 0 var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pillow-sparkle {
+  font-size: 22px;
+}
+
+.pillow-wrapper.slid-away {
+  transform: translate(65px, -45px) rotate(25deg);
+  opacity: 0.8;
+}
+
+.ribbon-key-item {
+  position: absolute;
+  bottom: 95px;
+  right: 45px;
+  width: 55px;
+  height: 55px;
+  z-index: 14;
+  cursor: pointer;
+}
+
+.key-flying-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px #ffd700);
+}
+
+.ribbon-key-item.key-flying {
+  animation: flyToDrawer 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes flyToDrawer {
+  0% { transform: scale(1) translate(0, 0); }
+  60% { transform: scale(1.3) translate(-80px, 10px) rotate(-45deg); }
+  100% { transform: scale(0.9) translate(-105px, 20px) rotate(0deg); opacity: 0; }
+}
+
+.drawer-clue-scroll {
+  position: absolute;
+  bottom: 30px;
+  width: 88%;
+  background: #fef3c7;
+  border: 3px solid var(--color-border);
+  border-radius: 18px;
+  padding: 10px 14px;
+  box-shadow: 4px 5px 0 var(--color-shadow);
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  animation: popInBubble 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.drawer-clue-scroll.scroll-revealed {
+  display: flex;
+}
+
+.clue-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+}
+
+.clue-text {
+  font-family: var(--font-dialog);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.cat-paws-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.mini-crown-clue {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* ===================================================
+   QUADRO 4: NÍVEL 2 - A GRANDE BIBLIOTECA & PORTAL DOS ASTROS
+   =================================================== */
+.library-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 10;
+}
+
+/* Coruja Sábia Athena */
+.owl-shelf-box {
+  position: absolute;
+  top: 50px;
+  left: 15px;
+  width: 55px;
+  height: 55px;
+  z-index: 18;
+  cursor: pointer;
+}
+
+.owl-sprite-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.4));
+}
+
+.owl-bubble-hint {
+  position: absolute;
+  top: -24px;
+  left: 10px;
+  background: #fff;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-purple);
+  box-shadow: 1px 1px 0 var(--color-border);
+  white-space: nowrap;
+  display: none;
+}
+
+/* Props da Biblioteca */
+.library-props {
+  position: absolute;
+  top: 55px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 12;
+}
+
+.prop-books {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
+}
+
+.prop-telescope {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
+}
+
+/* Princesa Aurora Investigando */
+.princess-library-hero {
+  position: absolute;
+  bottom: 135px;
+  left: 18px;
+  width: 105px;
+  height: 160px;
+  z-index: 14;
+}
+
+.prop-magnifier {
+  position: absolute;
+  top: 25px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  animation: floatZzz 3s infinite ease-in-out;
+}
+
+/* Fechadura Mística do Portal (Drop Target) */
+.portal-lock-container {
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85px;
+  height: 85px;
+  border: 4px solid var(--color-gold);
+  border-radius: 50%;
+  background: radial-gradient(circle, #2e1d3d 0%, #1e1b4b 100%);
+  box-shadow: 0 0 20px rgba(255, 200, 59, 0.4), inset 0 0 10px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  transition: all 0.3s ease;
+}
+
+.portal-lock-container.active-target {
+  border-color: #38bdf8;
+  box-shadow: 0 0 30px #38bdf8, inset 0 0 15px #38bdf8;
+  transform: translateX(-50%) scale(1.1);
+}
+
+.lock-glow-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 215, 0, 0.5);
+  animation: rotateRing 12s linear infinite;
+}
+
+@keyframes rotateRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.lock-glyph {
+  font-size: 32px;
+  color: #ffd700;
+  text-shadow: 0 0 8px #ffd700;
+}
+
+/* Cartão com a Charada em Verso */
+.riddle-parchment-card {
+  position: absolute;
+  top: 235px;
+  width: 90%;
+  background: rgba(254, 243, 199, 0.95);
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-shadow: 3px 4px 0 var(--color-shadow);
+  z-index: 16;
+  text-align: center;
+}
+
+.riddle-header {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.riddle-verses {
+  font-family: var(--font-dialog);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1e1b4b;
+}
+
+/* Pedestal das 3 Chaves */
+.keys-pedestal-container {
+  position: absolute;
+  bottom: 12px;
+  width: 92%;
+  height: 115px;
+  background: #7f1d1d;
+  border: 4px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: 4px 5px 0 var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.pedestal-plinth {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.key-draggable-item {
+  width: 80px;
+  height: 95px;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.key-draggable-item:active {
+  cursor: grabbing;
+}
+
+.key-sprite-img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.4));
+  pointer-events: none;
+}
+
+.key-caption {
+  font-size: 9.5px;
+  font-weight: 700;
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1px 6px;
+  margin-top: 4px;
+  color: var(--color-border);
+  box-shadow: 1px 1px 0 var(--color-border);
+  pointer-events: none;
+}
+
+.key-caption.lunar-caption {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* ===================================================
+   QUADRO 5: EPÍLOGO & VITÓRIA
+   =================================================== */
+.victory-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 16px;
+}
+
+.panel-bg-img.victory-glow {
+  filter: brightness(0.65) saturate(1.4);
+}
+
+.victory-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.96);
+  border: 4px solid var(--color-border);
+  border-radius: 28px;
+  padding: 20px 16px;
+  box-shadow: 6px 8px 0 var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  z-index: 15;
+  animation: popInBubble 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.victory-crown-hero {
+  width: 70px;
+  height: 70px;
+  animation: crownShine 2s infinite ease-in-out;
+}
+
+.victory-crown-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.victory-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-purple);
+}
+
+.victory-desc {
+  font-family: var(--font-dialog);
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: #374151;
+}
+
+.victory-characters-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 6px 0;
+}
+
+.char-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-purple);
+}
+
+.char-badge-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fdf2f8;
+  border: 2px solid var(--color-border);
+  padding: 2px;
+}
+
+.royal-seal-replay {
+  margin-top: 4px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: 3px solid var(--color-border);
+  border-radius: 22px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 3px 4px 0 var(--color-border);
+  transition: transform 0.1s ease;
+}
+
+.royal-seal-replay:active {
+  transform: scale(0.94);
+}
+
+.replay-seal-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.royal-seal-replay .label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2e1d3d;
+}
+
+/* ===================================================
+   ANIMAÇÕES, EFEITOS GERAIS & DRAG FEEDBACK
+   =================================================== */
+.idle-bounce {
+  animation: idleBounceAnim 3s infinite ease-in-out;
+}
+
+@keyframes idleBounceAnim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.idle-wiggle {
+  animation: idleWiggleAnim 0.7s infinite ease-in-out;
+}
+
+@keyframes idleWiggleAnim {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-5deg) scale(1.05); }
+  75% { transform: rotate(5deg) scale(1.05); }
+}
+
+.dragging {
+  opacity: 0.95;
+  z-index: 100 !important;
+  pointer-events: none;
+}
+
+.drag-snap-back {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.princess-dressed-spin {
+  animation: dressedSpin 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dressedSpin {
+  0% { transform: scale(0.6) rotate(-180deg); opacity: 0; }
+  60% { transform: scale(1.1) rotate(15deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Canvas de Partículas */
+#particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+}

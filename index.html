@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Princesa e a Coroa Perdida - HQ Interativa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- VIEWPORT PRINCIPAL (9:16 Mobile-First) -->
+  <main id="comic-viewport">
+    
+    <!-- BARRA SUPERIOR DO GIBI -->
+    <header class="comic-header">
+      <div class="comic-title-badge">
+        <img src="assets/items/item_coroa.png" class="header-crown-img" alt="Coroa">
+        <span>A Princesa e a Coroa Perdida</span>
+      </div>
+      <div class="header-actions">
+        <button id="sound-btn" class="sound-toggle-btn" title="Ativar/Desativar Som" aria-label="Som">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTAINER DE ROLAGEM DOS QUADROS DA HQ -->
+    <div id="comic-scroll-container">
+
+      <!-- ==========================================
+           QUADRO 1: O DESPERTAR REAL (INTRODUÇÃO)
+           ========================================== -->
+      <section id="panel-1" class="comic-panel active-panel" data-panel="1">
+        <div class="panel-ribbon">Quadro 1 • O Despertar</div>
+
+        <!-- Balão de Fala Inicial da Princesa -->
+        <div id="bubble-q1" class="speech-bubble bubble-princess" style="display: none;">
+          O Grande Baile Real é hoje... mas onde foi parar a minha <strong>Coroa</strong>?!
+        </div>
+
+        <div class="scene-container">
+          <!-- Cenário de Fundo Ilustrado: Quarto Matinal -->
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg-intro-quarto.jpg" alt="Quarto Real" class="panel-bg-img">
+            <div class="panel-light-overlay"></div>
+          </div>
+
+          <!-- Gatinho Pip Dormindo (Interativo) -->
+          <div id="cat-q1" class="pet-cat-q1 idle-bounce" title="Miau! Toque no gatinho Pip">
+            <img src="assets/items/item_gato.png" alt="Gatinho Real Pip" class="item-sprite-img">
+          </div>
+
+          <!-- Cama Real com Princesa Dormindo (Alvo de Toque) -->
+          <div id="bed-interactive" class="bed-wrapper idle-bounce" title="Toque na Princesa para acordá-la">
+            <div class="zzz-floater">Zzz... ✨</div>
+            <div class="missing-crown-cushion" title="Onde está a coroa?">
+              <div class="cushion-halo"></div>
+              <span class="missing-question">???</span>
+            </div>
+          </div>
+
+          <!-- Princesa Aurora Acordada em Pé -->
+          <div id="princess-q1-standing" class="princess-q1-awake">
+            <img src="assets/items/item_princesa.png" alt="Princesa Aurora" class="item-sprite-img princess-hero-img">
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           QUADRO 2: O GUARDA-ROUPA REAL (PUZZLE DRAG & DROP)
+           ========================================== -->
+      <section id="panel-2" class="comic-panel" data-panel="2">
+        <div class="panel-ribbon">Quadro 2 • O Guarda-Roupa</div>
+
+        <!-- Balão de Fala e Instrução Orgânica -->
+        <div id="bubble-q2" class="speech-bubble bubble-princess">
+          Preciso do meu <strong>Vestido Real Rosa</strong> para o Grande Baile!
+        </div>
+
+        <div class="wardrobe-scene">
+          <!-- Cenário de Fundo Ilustrado: Dressing Room -->
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg_painel_dressing_room.jpg" alt="Closet Real" class="panel-bg-img">
+            <div class="panel-light-overlay"></div>
+          </div>
+
+          <!-- Armário e Cabideiro de Roupas -->
+          <div class="wardrobe-container">
+            <div class="wardrobe-header-bar">
+              <span class="wardrobe-title">👗 Trajes Reais</span>
+            </div>
+            
+            <div class="dresses-rack">
+              <!-- VESTIDO 1: Amarelo Florido (Incorreto) -->
+              <div class="dress-item" id="dress-yellow" data-dress-type="yellow" title="Vestido Amarelo de Passeio">
+                <img src="assets/items/item_vestido_amarelo.png" alt="Vestido Amarelo" class="dress-sprite-img">
+                <span class="dress-tag">Jardim</span>
+              </div>
+
+              <!-- VESTIDO 2: Rosa Real de Gala (CORRETO ⭐) -->
+              <div class="dress-item idle-wiggle" id="dress-pink" data-dress-type="pink" title="Vestido Real Rosa de Baile">
+                <img src="assets/items/item_vestido_rosa.png" alt="Vestido Rosa Real" class="dress-sprite-img highlight-dress">
+                <span class="dress-tag real-tag">Baile Real ⭐</span>
+              </div>
+
+              <!-- VESTIDO 3: Pijama Azul Estrelado (Incorreto) -->
+              <div class="dress-item" id="dress-blue" data-dress-type="blue" title="Pijama Azul Noturno">
+                <img src="assets/items/item_pijama_azul.png" alt="Pijama Azul" class="dress-sprite-img">
+                <span class="dress-tag">Dormir</span>
+              </div>
+            </div>
+
+            <!-- Prateleira de Acessórios Fofos -->
+            <div class="accessories-shelf">
+              <img src="assets/items/item_chapeu_amarelo.png" class="shelf-accessory" alt="Chapéu de Sol" title="Chapéu Amarelo">
+              <img src="assets/items/item_gorro_azul.png" class="shelf-accessory" alt="Gorro" title="Gorro Noturno">
+              <img src="assets/items/item_sandalia_amarela.png" class="shelf-accessory" alt="Sandália" title="Sandália">
+              <img src="assets/items/item_chinelo_azul.png" class="shelf-accessory" alt="Chinelo" title="Pantufa">
+            </div>
+          </div>
+
+          <!-- Princesa no Provador (Área Alvo de Drop) -->
+          <div id="drop-target-princess" class="princess-q2-container" title="Arraste o vestido até aqui!">
+            <div class="drop-target-halo" id="drop-halo"></div>
+            
+            <!-- Estado Inicial: Princesa em Pijama -->
+            <div id="princess-q2-pajamas" class="princess-state-box">
+              <img src="assets/items/item_princesa.png" alt="Princesa em Pijama" class="princess-hero-img">
+            </div>
+
+            <!-- Estado Transformado: Princesa Pronta com Vestido de Gala & Coroa -->
+            <div id="princess-q2-dressed" class="princess-state-box" style="display: none;">
+              <img src="assets/items/item_princesa.png" alt="Princesa Pronta" class="princess-hero-img">
+              <img src="assets/items/item_vestido_rosa.png" alt="Vestido Ajustado" class="overlay-fitted-dress">
+              <img src="assets/items/item_coroa.png" alt="Coroa Cintilante" class="overlay-fitted-crown">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           QUADRO 3: A PENTEADEIRA & O MISTÉRIO DA GAVETA
+           ========================================== -->
+      <section id="panel-3" class="comic-panel" data-panel="3">
+        <div class="panel-ribbon">Quadro 3 • A Penteadeira</div>
+
+        <!-- Balão de Fala do Desafio Visual -->
+        <div id="bubble-q3" class="speech-bubble bubble-princess">
+          A gaveta de joias está trancada! Onde está a <strong>Chave com Fita</strong>?
+        </div>
+
+        <div class="vanity-scene">
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg-intro-quarto.jpg" alt="Penteadeira Real" class="panel-bg-img mirrored-bg">
+            <div class="panel-light-overlay"></div>
+          </div>
+
+          <!-- Penteadeira com Espelho e Gaveta -->
+          <div class="vanity-furniture-box">
+            <div class="vanity-mirror-frame">
+              <div class="mirror-sparkle">✨</div>
+            </div>
+            
+            <!-- Gaveta Central com Fechadura -->
+            <div class="vanity-drawer" id="vanity-drawer-box">
+              <div class="drawer-lock-keyhole">🔑</div>
+            </div>
+          </div>
+
+          <!-- Chave Dourada Escondida -->
+          <div id="hidden-key" class="ribbon-key-item" title="Chave Real com Laço" style="display: none;">
+            <img src="assets/items/item_chave_sol.png" alt="Chave Dourada" class="key-flying-img">
+          </div>
+
+          <!-- Travesseiro de Veludo Fofo (Objeto Interativo a Deslizar) -->
+          <div id="pillow-target" class="pillow-wrapper idle-bounce" title="Toque para levantar o travesseiro">
+            <div class="pillow-cushion-visual">
+              <span class="pillow-sparkle">🌸</span>
+            </div>
+          </div>
+
+          <!-- Pergaminho / Pista Revelada de Dentro da Gaveta -->
+          <div id="clue-scroll" class="drawer-clue-scroll">
+            <div class="clue-title">🐾 Trilha de Patinhas!</div>
+            <div class="clue-text">
+              "Miau! O gatinho Pip correu com a coroa para a <strong>Grande Biblioteca Ancestral</strong>!"
+            </div>
+            <div class="cat-paws-row">
+              <span>🐾</span>
+              <span>🐾</span>
+              <span>🐾</span>
+              <img src="assets/items/item_coroa.png" class="mini-crown-clue" alt="Coroa">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           QUADRO 4: NÍVEL 2 - A GRANDE BIBLIOTECA & O PORTAL DOS ASTROS
+           ========================================== -->
+      <section id="panel-4" class="comic-panel" data-panel="4">
+        <div class="panel-ribbon">Quadro 4 • O Portal dos Três Astros</div>
+
+        <!-- Balão de Fala da Princesa Investigadora -->
+        <div id="bubble-q4" class="speech-bubble bubble-princess">
+          A porta da Sala Secreta exige a chave certa! Leia a charada gravada no mármore.
+        </div>
+
+        <div class="library-scene">
+          <!-- Cenário de Fundo Ilustrado: Biblioteca & Portal Místico -->
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg_painel_biblioteca_portal.jpg" alt="Portal dos Astros" class="panel-bg-img">
+            <div class="panel-library-ambient"></div>
+          </div>
+
+          <!-- Coruja Sábia na Estante (Interativa) -->
+          <div id="owl-interactive" class="owl-shelf-box idle-bounce" title="Toque na Coruja Sábia">
+            <img src="assets/items/item_coruja.png" alt="Coruja Sábia" class="owl-sprite-img">
+            <span class="owl-bubble-hint" id="owl-hint">Uhuuu! 🌙</span>
+          </div>
+
+          <!-- Livros Mágicos e Bússola Decorativos -->
+          <div class="library-props">
+            <img src="assets/items/item_colecao_livros.png" class="prop-books" alt="Livros Antigos">
+            <img src="assets/items/item_telescopio.png" class="prop-telescope" alt="Telescópio">
+          </div>
+
+          <!-- Princesa Aurora com Lupa Investigando -->
+          <div class="princess-library-hero">
+            <img src="assets/items/item_princesa.png" class="princess-hero-img" alt="Princesa Investigando">
+            <img src="assets/items/item_lupa.png" class="prop-magnifier" alt="Lupa">
+          </div>
+
+          <!-- Fechadura Mística da Grande Porta de Carvalho (Área Alvo de Drop) -->
+          <div id="portal-lock-target" class="portal-lock-container" title="Encaixe a chave lunar aqui!">
+            <div class="lock-glow-ring"></div>
+            <div class="lock-glyph">☾</div>
+          </div>
+
+          <!-- Placa de Papiro com a Charada em Verso Poético -->
+          <div class="riddle-parchment-card">
+            <div class="riddle-header">📜 O Canto dos Três Astros</div>
+            <div class="riddle-verses">
+              <em>"Não nasci do fogo que queima o dia,<br>
+              Nem verto o pranto que o rubi reluz.<br>
+              Sou curva de prata, serena e fria,<br>
+              Que abraça a noite e ao segredo conduz."</em>
+            </div>
+          </div>
+
+          <!-- Pedestal de Veludo com as 3 Chaves Arrastáveis -->
+          <div class="keys-pedestal-container">
+            <div class="pedestal-plinth">
+              
+              <!-- CHAVE 1: Sol Dourado (Fogo/Dia - Incorreto) -->
+              <div class="key-draggable-item" id="key-sun" data-key-type="sun" title="Chave do Sol Dourado">
+                <img src="assets/items/item_chave_sol.png" alt="Chave do Sol" class="key-sprite-img">
+                <span class="key-caption">Sol de Ouro</span>
+              </div>
+
+              <!-- CHAVE 2: Lua Crescente de Prata (CORRETA ⭐) -->
+              <div class="key-draggable-item idle-wiggle" id="key-moon" data-key-type="moon" title="Chave da Lua Crescente">
+                <img src="assets/items/item_chave_lua.png" alt="Chave da Lua" class="key-sprite-img highlight-key">
+                <span class="key-caption lunar-caption">Lua Prateada ⭐</span>
+              </div>
+
+              <!-- CHAVE 3: Bronze com Lágrima de Rubi (Incorreto) -->
+              <div class="key-draggable-item" id="key-ruby" data-key-type="ruby" title="Chave com Gota de Rubi">
+                <img src="assets/items/item_chave_rubi.png" alt="Chave de Rubi" class="key-sprite-img">
+                <span class="key-caption">Gota de Rubi</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           QUADRO 5: EPÍLOGO & VITÓRIA DO GRANDE BAILE
+           ========================================== -->
+      <section id="panel-5" class="comic-panel" data-panel="5" style="display: none;">
+        <div class="panel-ribbon">Capítulo Final • O Grande Baile</div>
+        
+        <div class="victory-scene">
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg_painel_biblioteca_portal.jpg" alt="Baile Real" class="panel-bg-img victory-glow">
+          </div>
+
+          <div class="victory-card">
+            <div class="victory-crown-hero">
+              <img src="assets/items/item_coroa.png" class="victory-crown-img" alt="Coroa Real Recuperada">
+            </div>
+            
+            <h2 class="victory-title">A Coroa foi Recuperada! 🎉</h2>
+            <p class="victory-desc">
+              Você vestiu a Princesa com o traje oficial, seguiu as patinhas mágicas e abriu o Portal dos Astros decifrando a charada lunar! O Baile Real está salvo!
+            </p>
+
+            <div class="victory-characters-row">
+              <div class="char-badge">
+                <img src="assets/items/item_princesa.png" class="char-badge-img" alt="Princesa">
+                <span>Aurora</span>
+              </div>
+              <div class="char-badge">
+                <img src="assets/items/item_gato.png" class="char-badge-img" alt="Gatinho">
+                <span>Pip</span>
+              </div>
+              <div class="char-badge">
+                <img src="assets/items/item_coruja.png" class="char-badge-img" alt="Coruja">
+                <span>Athena</span>
+              </div>
+            </div>
+
+            <!-- Selo Real Interativo para Reiniciar o Jogo (Zero-Button UI) -->
+            <div id="royal-seal-replay" class="royal-seal-replay" title="Toque no Selo Real para Jogar Novamente">
+              <img src="assets/items/item_coroa.png" class="replay-seal-icon" alt="Jogar de Novo">
+              <span class="label">Jogar Novamente ✨</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- CANVAS DE PARTÍCULAS (SPARKLES, STARS & HEARTS) -->
+    <canvas id="particle-canvas"></canvas>
+
+  </main>
+
+  <script src="sound-manager.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
