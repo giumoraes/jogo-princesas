@@ -1300,8 +1300,8 @@ html, body {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 168px;
-  height: 118px;
+  width: 182px;
+  height: 124px;
   border: 3px solid #6b4a1f;
   border-radius: 12px;
   background: radial-gradient(circle at 50% 35%, #2f5db8 0%, #1e3f86 55%, #14295c 100%);
@@ -1309,22 +1309,23 @@ html, body {
   z-index: 3;
 }
 
-/* A Coroa Cerimonial: alvo de toque final */
+/* A Coroa Cerimonial sobre o veludo: caminha do Pip e alvo de toque final */
 .epi-crown {
   position: absolute;
   left: 50%;
-  top: 30px;
+  bottom: 8px;
   transform: translateX(-50%);
-  width: 78px;
-  height: 62px;
+  width: 132px;
+  height: 88px;
   cursor: pointer;
-  z-index: 5;
+  z-index: 4;
 }
 
 .epi-crown-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center bottom;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
   position: relative;
   z-index: 2;
@@ -1353,15 +1354,15 @@ html, body {
   pointer-events: none;
 }
 
-/* Pip dormindo dentro do cofre, usando a coroa de caminha */
+/* Pip dormindo dentro do cofre, aninhado na coroa (caminha) */
 .epi-cat-sleeping {
   position: absolute;
   left: 50%;
-  bottom: 6px;
+  bottom: 26px;
   transform: translateX(-50%);
-  width: 118px;
-  height: 74px;
-  z-index: 6;
+  width: 98px;
+  height: 60px;
+  z-index: 5;
 }
 
 .epi-cat-img {
@@ -1444,12 +1445,11 @@ html, body {
   color: #f3e8ff;
 }
 
-/* --- Selo Real (replay) — único "botão" tolerado (Zero-Button UI) --- */
+/* --- Selo Real (replay) — único "botão" tolerado (Zero-Button UI) ---
+   Posicionamento fica no seletor de ID (#royal-seal-replay) mais abaixo,
+   pois a seção de hitbox tátil já define regras nesse ID e venceria por
+   especificidade uma regra de classe. --- */
 .royal-seal-replay {
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  transform: translateX(-50%);
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   border: 3px solid var(--color-border);
   border-radius: 22px;
@@ -1460,11 +1460,6 @@ html, body {
   cursor: pointer;
   box-shadow: 3px 4px 0 var(--color-border);
   transition: transform 0.1s ease;
-  z-index: 30;
-}
-
-.royal-seal-replay:active {
-  transform: translateX(-50%) scale(0.94);
 }
 
 .replay-seal-icon {
@@ -1563,8 +1558,17 @@ html, body {
 }
 
 /* --- Hitbox tátil mínimo 72x72px (área invisível expandida) --- */
+/* Selo Real: ancorado no rodapé do Epílogo, centrado. ID para vencer
+   por especificidade a regra de classe .royal-seal-replay. */
 #royal-seal-replay {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+#royal-seal-replay:active {
+  transform: translateX(-50%) scale(0.94);
 }
 .dress-item::before,
 .key-draggable-item::before,

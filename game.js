@@ -1473,14 +1473,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const crownRect = epiCrownTarget.getBoundingClientRect();
       const auroraRect = epiAuroraEl.getBoundingClientRect();
 
-      // A Coroa flutua suavemente até a cabeça da Aurora.
-      const dx = (auroraRect.left + auroraRect.width * 0.5) - (crownRect.left + crownRect.width * 0.5);
-      const dy = (auroraRect.top + auroraRect.height * 0.1) - (crownRect.top + crownRect.height * 0.5);
+      // A Coroa flutua suavemente até a cabeça da Aurora. O delta é medido
+      // em px de tela; o translateX(-50%) de centragem do CSS é preservado
+      // dentro do calc() para a coroa não "pular" meia-largura ao mover.
+      const dx = (auroraRect.left + auroraRect.width * 0.4) - (crownRect.left + crownRect.width * 0.5);
+      const dy = (auroraRect.top + auroraRect.height * 0.12) - (crownRect.top + crownRect.height * 0.5);
       epiCrownTarget.classList.add('epi-crown-floated');
       epiCrownTarget.style.transition = 'transform 1.1s cubic-bezier(0.34, 1.1, 0.5, 1)';
       // rAF garante que a transição seja aplicada a partir do estado atual.
       requestAnimationFrame(() => {
-        epiCrownTarget.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) scale(0.66)';
+        epiCrownTarget.style.transform =
+          'translate(calc(-50% + ' + dx + 'px), ' + dy + 'px) scale(0.58)';
       });
 
       // Cascata de brilhos dourados + corações sobre a cabeça da Aurora.
