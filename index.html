@@ -179,6 +179,36 @@
             </div>
           </div>
 
+          <!-- FASE SHAPE-MATCH: 3 pedrinhas preciosas -> 3 entalhes da gaveta secreta -->
+          <div id="shape-match-layer" class="shape-match-layer">
+            <!-- Entalhes em baixo-relevo na madeira da gaveta -->
+            <div class="drawer-carvings">
+              <div class="carving-slot" data-shape="coracao" title="Entalhe de Coração">
+                <span class="carving-glyph">&#9825;</span>
+              </div>
+              <div class="carving-slot" data-shape="estrela" title="Entalhe de Estrela">
+                <span class="carving-glyph">&#9734;</span>
+              </div>
+              <div class="carving-slot" data-shape="flor" title="Entalhe de Flor">
+                <span class="carving-glyph">&#10047;</span>
+              </div>
+            </div>
+
+            <!-- Pedrinhas preciosas espalhadas no tampo da penteadeira -->
+            <div class="gem-draggable gem-pos-1" id="gem-coracao" data-shape="coracao" data-glyph="&#9825;" title="Pedra Coração">
+              <img src="assets/items/item_pedra_coracao.png" alt="Pedra Coração" class="gem-sprite-img"
+                   onerror="this.style.display='none';this.parentNode.classList.add('gem-img-missing');console.warn('[P3] asset ausente:', this.src, '- usando placeholder colorido. TODO: entregar no lote de assets P7');">
+            </div>
+            <div class="gem-draggable gem-pos-2" id="gem-estrela" data-shape="estrela" data-glyph="&#9734;" title="Pedra Estrela">
+              <img src="assets/items/item_pedra_estrela.png" alt="Pedra Estrela" class="gem-sprite-img"
+                   onerror="this.style.display='none';this.parentNode.classList.add('gem-img-missing');console.warn('[P3] asset ausente:', this.src, '- usando placeholder colorido. TODO: entregar no lote de assets P7');">
+            </div>
+            <div class="gem-draggable gem-pos-3" id="gem-flor" data-shape="flor" data-glyph="&#10047;" title="Pedra Flor">
+              <img src="assets/items/item_pedra_flor.png" alt="Pedra Flor" class="gem-sprite-img"
+                   onerror="this.style.display='none';this.parentNode.classList.add('gem-img-missing');console.warn('[P3] asset ausente:', this.src, '- usando placeholder colorido. TODO: entregar no lote de assets P7');">
+            </div>
+          </div>
+
           <!-- Pergaminho / Pista Revelada de Dentro da Gaveta -->
           <div id="clue-scroll" class="drawer-clue-scroll">
             <div class="clue-title">🐾 Trilha de Patinhas!</div>
@@ -276,9 +306,106 @@
       </section>
 
       <!-- ==========================================
+           QUADRO 2.2: A SALA DAS RELÍQUIAS & A ESTANTE DA CRIAÇÃO (P4)
+           Puzzle: ordenar 4 tomos heráldicos nos nichos I..IV seguindo
+           "O Poema das Quatro Estações". Encadeamento do Nível 2:
+           Portal (#panel-4) -> Estante (#panel-5) -> Cofre das Engrenagens
+           (próximo quadro, Executor 12/P5) -> Epílogo (#panel-6).
+           ========================================== -->
+      <section id="panel-5" class="comic-panel" data-panel="5">
+        <div class="panel-ribbon">Quadro 2.2 • A Sala das Relíquias</div>
+
+        <!-- Balão da Princesa: carrega também as micro-reações cômicas aos erros -->
+        <div id="bubble-q5" class="speech-bubble bubble-princess">
+          A <strong>Estante da Criação</strong> pede seus quatro tomos na ordem certa. O poema do friso conta a história das estações.
+        </div>
+
+        <div class="relics-scene">
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg_painel_reliquias.jpg" alt="Sala das Relíquias" class="panel-bg-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('bg-missing');console.warn('[P4] asset ausente:', this.src, '- usando fundo placeholder. TODO: entregar no lote de assets P7');">
+            <div class="panel-light-overlay"></div>
+          </div>
+
+          <!-- Camada reservada à revelação do altar / Cofre (próximo quadro) -->
+          <div class="relic-altar-reveal">
+            <img src="assets/backgrounds/bg_painel_cofre_domo.jpg" alt="Altar do Cofre das Engrenagens Celestiais" class="altar-reveal-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('bg-missing');console.warn('[P4] asset ausente:', this.src, '- placeholder. TODO: entregar no lote de assets P7');">
+            <div class="altar-cofre-hint">⚙️</div>
+          </div>
+
+          <!-- PISTA AMBIENTAL 1: 4 aquarelas na parede, na sequência das estações -->
+          <div class="relic-watercolors" aria-hidden="true">
+            <div class="watercolor-frame wc-inverno" title="Um esquilo enterra a bolota na neve">
+              <span class="wc-art">🐿️</span><span class="wc-snow">❄️</span>
+            </div>
+            <div class="watercolor-frame wc-primavera" title="Um brotinho rompe a terra na primavera">
+              <span class="wc-art">🌱</span>
+            </div>
+            <div class="watercolor-frame wc-verao" title="Pássaros nos galhos verdes do verão">
+              <span class="wc-art">🐦</span><span class="wc-leaf">🌳</span>
+            </div>
+            <div class="watercolor-frame wc-outono" title="O vento de outono desfolha a árvore">
+              <span class="wc-art">🍂</span><span class="wc-wind">🌬️</span>
+            </div>
+          </div>
+
+          <!-- A ESTANTE DA CRIAÇÃO: friso com a Charada 2 + 4 nichos numerados I..IV -->
+          <div class="creation-bookcase" id="creation-bookcase">
+            <div class="bookcase-frieze" title="O Poema das Quatro Estações">
+              <div class="frieze-title">✦ O Poema das Quatro Estações ✦</div>
+              <div class="frieze-verses">
+                <em>"O tempo caminha em passos sem fim, / Do grão enterrado ao sopro no jardim: / Primeiro adormece no ventre do chão, / Depois ganha forças rompendo a cerviz, / Floresce na copa em plena estação, / E tomba dourada de volta à raiz."</em>
+              </div>
+            </div>
+
+            <div class="bookcase-niches">
+              <div class="book-niche" data-niche="1"><span class="niche-roman">I</span></div>
+              <div class="book-niche" data-niche="2"><span class="niche-roman">II</span></div>
+              <div class="book-niche" data-niche="3"><span class="niche-roman">III</span></div>
+              <div class="book-niche" data-niche="4"><span class="niche-roman">IV</span></div>
+            </div>
+            <div class="bookcase-crest" aria-hidden="true">🌳</div>
+          </div>
+
+          <!-- PISTA AMBIENTAL 2: tapete circular com o ciclo semente -> broto -> copa -> folha -->
+          <div class="cycle-rug" aria-hidden="true" title="semente → broto → copa → folha">
+            <span class="rug-step rug-step-1">🌰</span>
+            <span class="rug-step rug-step-2">🌱</span>
+            <span class="rug-step rug-step-3">🌳</span>
+            <span class="rug-step rug-step-4">🍂</span>
+          </div>
+
+          <!-- MESA COM OS 4 TOMOS HERÁLDICOS ARRASTÁVEIS (posições iniciais embaralhadas) -->
+          <div class="relics-table" aria-hidden="true"></div>
+
+          <div class="tome-item tome-pos-3 idle-wiggle" id="tome-semente" data-tome="semente" data-order="1" title="Tomo da Semente">
+            <img src="assets/items/item_livro_semente.png" alt="Tomo da Semente" class="tome-sprite-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('tome-img-missing');console.warn('[P4] asset ausente:', this.src, '- usando placeholder. TODO: entregar no lote de assets P7');">
+            <span class="tome-label">Semente</span>
+          </div>
+          <div class="tome-item tome-pos-1" id="tome-broto" data-tome="broto" data-order="2" title="Tomo do Broto">
+            <img src="assets/items/item_livro_broto.png" alt="Tomo do Broto" class="tome-sprite-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('tome-img-missing');console.warn('[P4] asset ausente:', this.src, '- usando placeholder. TODO: entregar no lote de assets P7');">
+            <span class="tome-label">Broto</span>
+          </div>
+          <div class="tome-item tome-pos-4" id="tome-carvalho" data-tome="carvalho" data-order="3" title="Tomo do Carvalho">
+            <img src="assets/items/item_livro_carvalho.png" alt="Tomo do Carvalho" class="tome-sprite-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('tome-img-missing');console.warn('[P4] asset ausente:', this.src, '- usando placeholder. TODO: entregar no lote de assets P7');">
+            <span class="tome-label">Carvalho</span>
+          </div>
+          <div class="tome-item tome-pos-2" id="tome-folha" data-tome="folha" data-order="4" title="Tomo da Folha Dourada">
+            <img src="assets/items/item_livro_folha.png" alt="Tomo da Folha Dourada" class="tome-sprite-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('tome-img-missing');console.warn('[P4] asset ausente:', this.src, '- usando placeholder. TODO: entregar no lote de assets P7');">
+            <span class="tome-label">Folha Dourada</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
            QUADRO 5: EPÍLOGO & VITÓRIA DO GRANDE BAILE
            ========================================== -->
-      <section id="panel-5" class="comic-panel" data-panel="5" style="display: none;">
+      <section id="panel-6" class="comic-panel" data-panel="6" style="display: none;">
         <div class="panel-ribbon">Capítulo Final • O Grande Baile</div>
         
         <div class="victory-scene">
