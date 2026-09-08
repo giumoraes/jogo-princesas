@@ -85,6 +85,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('particle-canvas');
   const ctx = canvas.getContext('2d');
 
+  // ===================================================
+  // P8 — REDE DE SEGURANÇA PARA IMAGENS QUE NÃO CARREGAM
+  //  Handler global: qualquer <img> que falhe ao carregar ganha um
+  //  placeholder visível (retângulo tracejado com o texto do alt),
+  //  para nenhum quadro quebrar em silêncio.
+  //  - Não mexe no src -> o evento 'error' não volta a disparar (sem loop).
+  //  - Uma flag (data-img-fallback) é trava extra contra reentrância.
+  //  - <img> com onerror inline próprio (pedras/tomos/fundos/epílogo)
+  //    é respeitado: aquele handler dedicado tem placeholder sob medida.
+  // ===================================================
+  function applyImgFallback(img) {
+    if (!img || img.dataset.imgFallback === '1') return;
+    if (img.hasAttribute('onerror')) return; // handler dedicado cuida deste
+    img.dataset.imgFallback = '1';
+    img.classList.add('img-load-fallback');
+    console.warn('[P8] imagem falhou ao carregar — placeholder aplicado:', img.getAttribute('src'));
+  }
+
+  // 'error' de recurso não borbulha: capturamos na fase de captura.
+  document.addEventListener('error', (e) => {
+    const t = e.target;
+    if (t && t.tagName === 'IMG') applyImgFallback(t);
+  }, true);
+
+  // Imagens que já falharam antes deste script rodar (complete + sem bitmap).
+  document.querySelectorAll('img').forEach((img) => {
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) {
+      applyImgFallback(img);
+    }
+  });
+
   // ESTADO DO JOGO
   let currentPanelIndex = 0;
   let q1Awake = false;
@@ -594,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
       princessQ2Dressed.style.display = 'block';
       princessQ2Dressed.classList.add('princess-dressed-spin');
 
-      bubbleQ2.innerHTML = 'Ficou deslumbrante! ✨ Agora preciso da <strong>Chave de Fita</strong>!';
+      bubbleQ2.innerHTML = 'Ficou deslumbrante! ✨ Agora preciso da <strong>Chave com Fita</strong>!';
 
       setTimeout(() => {
         scrollToPanel(2);
@@ -960,7 +991,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.soundManager.playSteamHiss();
       showOnomatopoeia('TSSSS!', 110, 180, panels[3]);
 
-      bubbleQ4.innerHTML = 'Ai! Quente como forno! A porta não gosta de sol a pino...';
+      bubbleQ4.innerHTML = 'Ai, ai, ai! Quente como pão recém-saído do forno! Parece que essa porta não é muito fã de sol a pino...';
 
       item.classList.add('drag-snap-back');
       item.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
@@ -974,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.soundManager.playGrumble();
       showOnomatopoeia('GROOOMP!', 100, 180, panels[3]);
 
-      bubbleQ4.innerHTML = 'Nossa, que dramática! Essa chave de rubi não abriu nada!';
+      bubbleQ4.innerHTML = 'Nossa, que dramática! Parece até um brinco pomposo da tia-avó Matilde, mas abrir que é bom, nada!';
 
       item.classList.add('drag-snap-back');
       item.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
@@ -1585,7 +1616,7 @@ document.addEventListener('DOMContentLoaded', () => {
       portalLockTarget.classList.remove('active-target', 'snap-ready');
       portalLockTarget.style.borderColor = 'var(--color-gold)';
       portalLockTarget.style.boxShadow = '';
-      bubbleQ4.innerHTML = 'A porta da Sala Secreta exige a chave certa! Leia a charada gravada no mármore.';
+      bubbleQ4.innerHTML = 'Três chaves majestosas... mas apenas uma tem a alma da noite para acordar esta fechadura adormecida!';
 
       // Reset Quadro 2.2 (Sala das Relíquias & Estante da Criação)
       [1, 2, 3, 4].forEach(n => { nicheOccupant[n] = null; });
@@ -1603,7 +1634,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bookNiches.forEach(el => el.classList.remove('niche-filled', 'niche-correct', 'snap-ready'));
       creationBookcase.classList.remove('crest-complete', 'bookcase-recede');
       if (altarReveal) altarReveal.classList.remove('revealed');
-      bubbleQ5.innerHTML = 'A <strong>Estante da Criação</strong> pede seus quatro tomos na ordem certa. O poema do friso conta a história das estações.';
+      bubbleQ5.innerHTML = 'Quatro livros lendários fora do lugar! Se eu compreender o ciclo que a própria floresta ensina, a passagem vai se abrir!';
 
       // Reset Quadro 2.3 (Cofre das Engrenagens Celestiais)
       q6VaultSolved = false;

@@ -955,7 +955,7 @@ html, body {
   z-index: 10;
 }
 
-/* Coruja Sábia Athena */
+/* Coruja Sábia (sem nome no roteiro) */
 .owl-shelf-box {
   position: absolute;
   top: 50px;
@@ -1609,8 +1609,9 @@ html, body {
 }
 
 /* --- Ghost Finger Trail (mãozinha fantasma de dica) ---
-   Classe isolada e fácil de desligar: um P8 futuro suspende
-   estas animações em (prefers-reduced-motion: reduce). */
+   Classe isolada e fácil de desligar: o bloco P8 de
+   (prefers-reduced-motion: reduce) no fim deste arquivo
+   suspende estas animações. */
 .ghost-hand {
   position: absolute;
   top: 0;
@@ -1979,4 +1980,94 @@ html, body {
 @keyframes dustPuffAnim {
   0% { transform: scale(0.4); opacity: 0.9; }
   100% { transform: scale(4.5); opacity: 0; }
+}
+
+/* ===================================================
+   P8 — PLACEHOLDER VISÍVEL PARA IMAGEM QUE FALHA AO CARREGAR
+   Aplicado pelo handler global de <img> onerror em game.js: um
+   retângulo de borda tracejada que mostra o texto do alt, para
+   nenhum quadro quebrar em silêncio. Não altera o src (não entra
+   em loop de onerror).
+   =================================================== */
+img.img-load-fallback {
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-soft-pink),
+    var(--color-soft-pink) 7px,
+    #ffffff 7px,
+    #ffffff 14px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3px;
+  font-family: var(--font-comic);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-border);
+  object-fit: contain;
+  filter: none;
+}
+
+/* ===================================================
+   P8 — ACESSIBILIDADE: MOVIMENTO REDUZIDO
+   Diretriz infantil do projeto: quando o sistema pede
+   (prefers-reduced-motion: reduce), zeramos as animações
+   DECORATIVAS em loop (respiros de idle, dica, giros e
+   brilhos ambientes). O feedback que COMUNICA resultado
+   segue ativo: partículas de acerto, balões (popInBubble),
+   onomatopeias, abertura de gaveta/porta, recuo da estante,
+   transições entre quadros e a chegada da coroa na vitória.
+   O componente do Cofre Celestial traz o seu próprio bloco
+   em celestial-vault.css.
+   =================================================== */
+@media (prefers-reduced-motion: reduce) {
+  /* Respiros de ociosidade e nudges de dica */
+  .idle-bounce,
+  .idle-wiggle,
+  .epi-crown.epi-crown-hintable .epi-crown-img,
+  .epi-cat-zzz {
+    animation: none !important;
+  }
+
+  /* Mãozinha-fantasma de dica (Ghost Finger Trail): não pisca nem
+     desliza; fica invisível para não sobrar um 👆 estático na tela. */
+  .ghost-hand,
+  .ghost-hand.gh-pulse,
+  .ghost-hand.gh-slide {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  /* Giros: o anel decorativo do portal e o "spin" de vitória.
+     O estado final (princesa vestida / Aurora triunfante) continua
+     visível — some só a rotação. */
+  .lock-glow-ring,
+  .princess-dressed-spin,
+  .epi-aurora.epi-aurora-triumph {
+    animation: none !important;
+  }
+
+  /* Brilhos/halos ambientes em loop (puramente decorativos). */
+  .zzz-floater,
+  .prop-magnifier,
+  .overlay-fitted-crown,
+  .mirror-sparkle,
+  .cushion-halo,
+  .altar-cofre-hint,
+  .epi-crown.epi-crown-hintable .epi-crown-halo {
+    animation: none !important;
+  }
+  /* A coroa da princesa vestida precisa manter a centragem que o
+     keyframe crownShine aplicava via transform. */
+  .overlay-fitted-crown {
+    transform: translateX(-50%);
+  }
 }
