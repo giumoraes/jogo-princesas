@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('panel-3'),
     document.getElementById('panel-4'),
     document.getElementById('panel-5'),
-    document.getElementById('panel-6')
+    document.getElementById('panel-6'), // Quadro 2.3 - Cofre das Engrenagens Celestiais (P5)
+    document.getElementById('panel-7')  // Epílogo & Vitória do Grande Baile
   ];
 
   const soundBtn = document.getElementById('sound-btn');
@@ -55,6 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const altarReveal = document.querySelector('#panel-5 .relic-altar-reveal');
   const tomeItems = document.querySelectorAll('#panel-5 .tome-item');
   const bookNiches = document.querySelectorAll('#panel-5 .book-niche');
+
+  // Quadro 2.3 (P5): O Cofre das Engrenagens Celestiais
+  const bubbleQ6 = document.getElementById('bubble-q6');
+  const celestialVaultHost = document.getElementById('celestial-vault-host');
+  let celestialVault = null;
+  let q6VaultSolved = false;
 
   // Quadro 5: Epílogo
   const royalSealReplay = document.getElementById('royal-seal-replay');
@@ -207,6 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
     targetPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
     window.soundManager.playWhoosh();
     resetIdleTimer();
+
+    // Quadro 2.3 (P5): monta/reseta o Cofre das Engrenagens Celestiais ao entrar nele.
+    if (index === 5) initCelestialVault();
   }
 
   // ===================================================
@@ -1304,12 +1314,73 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1400);
 
     setTimeout(() => {
-      // Encadeamento do Nível 2: Estante -> Cofre das Engrenagens Celestiais -> Epílogo.
-      // O Quadro do Cofre é de outro executor (P5 / Executor 12). Enquanto ele não
-      // existir, seguimos direto para o Epílogo (índice 5). Quando o Cofre for
-      // inserido entre os dois, este destino passa a ser o índice do novo quadro.
+      // Encadeamento do Nível 2: Estante (#panel-5) -> Cofre das Engrenagens
+      // Celestiais (#panel-6, índice 5) -> Epílogo (#panel-7, índice 6).
       scrollToPanel(5);
     }, 3400);
+  }
+
+  // ===================================================
+  // QUADRO 2.3 (P5): O COFRE DAS ENGRENAGENS CELESTIAIS
+  //  Puzzle-assinatura do Nível 2. Componente isolado em celestial-vault.js
+  //  (classe CelestialVaultPuzzle) + celestial-vault.css. Instanciado quando
+  //  o quadro fica ativo; no onSolved, avança para o Epílogo.
+  // ===================================================
+  function initCelestialVault() {
+    if (!celestialVaultHost || typeof CelestialVaultPuzzle === 'undefined') {
+      console.warn('[P5] CelestialVaultPuzzle indisponível — avançando direto para o Epílogo.');
+      if (!q6VaultSolved) {
+        q6VaultSolved = true;
+        setTimeout(() => scrollToPanel(6), 500);
+      }
+      return;
+    }
+
+    // Reentrância (replay / re-visita do quadro): apenas reseta a instância viva.
+    if (celestialVault) {
+      q6VaultSolved = false;
+      celestialVault.reset();
+      return;
+    }
+
+    celestialVault = new CelestialVaultPuzzle(celestialVaultHost, {
+      initialRotationA: 90,
+      initialRotationB: 180,
+      soundEnabled: true,
+      onStateChange: (state) => {
+        if (q6VaultSolved) return;
+        if (state && state.microReaction) {
+          bubbleQ6.innerHTML = state.message;
+          return;
+        }
+        if (state && state.moonPhase && state.constellation) {
+          bubbleQ6.innerHTML =
+            'Alinhe a <strong>Lua Cheia</strong> e a <strong>Ursa Maior</strong> no topo. ' +
+            'Agora: ' + state.moonPhase.name + ' · ' + state.constellation.name + '.';
+        }
+      },
+      onSolved: () => {
+        if (q6VaultSolved) return;
+        q6VaultSolved = true;
+
+        bubbleQ6.innerHTML = 'As engrenagens celestiais se encaixam... o <strong>Cofre</strong> se abre! ✨';
+        showOnomatopoeia('CLAAANG!', 120, 130, panels[5]);
+
+        const hRect = celestialVaultHost.getBoundingClientRect();
+        const cRect = canvas.getBoundingClientRect();
+        spawnParticles(
+          hRect.left + hRect.width / 2 - cRect.left,
+          hRect.top + hRect.height / 2 - cRect.top,
+          70,
+          'star'
+        );
+
+        setTimeout(() => {
+          window.soundManager.playRoyalFanfare();
+          scrollToPanel(6); // Epílogo (#panel-7)
+        }, 2200);
+      }
+    });
   }
 
   // ===================================================
@@ -1402,8 +1473,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (altarReveal) altarReveal.classList.remove('revealed');
       bubbleQ5.innerHTML = 'A <strong>Estante da Criação</strong> pede seus quatro tomos na ordem certa. O poema do friso conta a história das estações.';
 
-      // Reset Q5 (Epílogo)
+      // Reset Quadro 2.3 (Cofre das Engrenagens Celestiais)
+      q6VaultSolved = false;
+      if (celestialVault) celestialVault.reset();
       panels[5].style.display = 'none';
+      if (bubbleQ6) {
+        bubbleQ6.innerHTML = 'O <strong>Cofre das Engrenagens Celestiais</strong>! Preciso alinhar a <strong>Lua Cheia</strong> e a <strong>Ursa Maior</strong> bem no topo.';
+      }
+
+      // Reset Q5 (Epílogo)
+      panels[6].style.display = 'none';
 
       // Volta ao Quadro 1
       scrollToPanel(0);

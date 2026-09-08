@@ -1,0 +1,184 @@
+/* =============================================================================
+   COFRE DAS ENGRENAGENS CELESTIAIS — Quadro 2.3 / Nível 2 (P5)
+   Estilos do componente isolado `CelestialVaultPuzzle` (celestial-vault.js).
+   100% autocontido: sem @import, sem CDN, sem assets externos.
+   ============================================================================= */
+
+.cv-root {
+  /* ARMADILHA CRÍTICA: sem isto o celular rola a página junto com o gesto
+     de girar os anéis. O JS também seta isto inline por segurança. */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  position: relative;
+  width: 100%;
+  max-width: min(86vw, 380px);
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(4px 6px 0 rgba(43, 27, 68, 0.35));
+}
+
+.cv-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+  cursor: grab;
+}
+.cv-root.cv-dragging .cv-svg { cursor: grabbing; }
+
+/* Anéis: o transform de rotação é escrito pelo JS via atributo `transform`.
+   A transição only-CSS é desligada durante o arrasto para não brigar com o rAF. */
+.cv-ring { transform-box: view-box; }
+.cv-ring-a,
+.cv-ring-b { transition: none; }
+
+.cv-ring-hit {
+  fill: transparent;
+  stroke: transparent;
+  pointer-events: auto;
+}
+
+/* Realce do anel ativo enquanto o dedo o gira. */
+.cv-ring-a.cv-active .cv-ring-plate,
+.cv-ring-b.cv-active .cv-ring-plate {
+  filter: drop-shadow(0 0 6px var(--cv-gold, #ffd873));
+}
+
+.cv-slot-label {
+  font-family: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  fill: #f3e9ff;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(30, 18, 52, 0.85);
+  stroke-width: 2.4px;
+  stroke-linejoin: round;
+}
+
+.cv-moon-glyph {
+  font-size: 34px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.cv-top-marker { fill: var(--cv-gold, #ffd873); stroke: #2b1b44; stroke-width: 2; }
+.cv-top-marker-glow {
+  fill: none;
+  stroke: var(--cv-gold, #ffd873);
+  stroke-width: 2;
+  opacity: 0.55;
+}
+
+/* Ponteiro do Sol (Anel C) — giro livre; só anima na celebração. */
+.cv-ring-c { transform-origin: center; }
+.cv-sun-disc { fill: url(#cvSunGrad); stroke: #b8860b; stroke-width: 2.5; }
+.cv-sun-ray  { fill: url(#cvSunGrad); stroke: #b8860b; stroke-width: 1.5; }
+.cv-sun-face { fill: #7a5b12; }
+
+.cv-root.cv-solved .cv-ring-c {
+  animation: cv-sun-spin 2.6s cubic-bezier(0.22, 1, 0.36, 1) 1 both;
+}
+@keyframes cv-sun-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(1080deg); }
+}
+
+.cv-root.cv-solved .cv-halo {
+  animation: cv-halo-pulse 1.8s ease-out 1 both;
+}
+@keyframes cv-halo-pulse {
+  0%   { opacity: 0; r: 70px; }
+  40%  { opacity: 0.8; }
+  100% { opacity: 0; r: 230px; }
+}
+
+/* Tremidinha de tontura no giro frenético. */
+.cv-root.cv-dizzy { animation: cv-dizzy 0.5s ease-in-out 2; }
+@keyframes cv-dizzy {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25%      { transform: translateX(-5px) rotate(-1.4deg); }
+  75%      { transform: translateX(5px) rotate(1.4deg); }
+}
+
+/* Partículas de destravamento (DOM, autocontidas no componente). */
+.cv-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 5;
+}
+.cv-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--cv-gold, #ffd873) 55%, #ff7bd0 100%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.cv-particle.cv-p-run {
+  animation: cv-particle-fly var(--cv-dur, 900ms) cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+}
+@keyframes cv-particle-fly {
+  0%   { opacity: 1; transform: translate(0, 0) scale(0.3); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--cv-dx), var(--cv-dy)) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-root.cv-solved .cv-ring-c,
+  .cv-root.cv-dizzy,
+  .cv-particle.cv-p-run { animation-duration: 0.01ms; animation-iteration-count: 1; }
+}
+
+/* =============================================================================
+   INTEGRAÇÃO NO QUADRO 2.3 (#panel-6) — cena que hospeda o componente
+   ============================================================================= */
+.vault-scene {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px 14px 22px;
+  overflow: hidden;
+}
+
+.vault-frieze {
+  position: relative;
+  z-index: 2;
+  max-width: 92%;
+  text-align: center;
+  font-family: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #3a2a5e;
+  background: rgba(255, 248, 230, 0.88);
+  border: 2.5px solid #2b1b44;
+  border-radius: 12px;
+  padding: 5px 12px;
+  box-shadow: 2px 2px 0 #2b1b44;
+}
+
+.celestial-vault-host {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A Princesa e a Coroa Perdida - HQ Interativa</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="celestial-vault.css">
 </head>
 <body>
 
@@ -403,9 +404,44 @@
       </section>
 
       <!-- ==========================================
-           QUADRO 5: EPÍLOGO & VITÓRIA DO GRANDE BAILE
+           QUADRO 2.3: O COFRE DAS ENGRENAGENS CELESTIAIS (P5 / Executor 12)
+           Mecânica-assinatura do Nível 2 — três anéis concêntricos (fases da
+           lua / constelações / sol dourado) girados por toque. Vitória:
+           Lua Cheia + Ursa Maior alinhadas no topo.
+           Componente isolado: celestial-vault.js (classe CelestialVaultPuzzle)
+           + celestial-vault.css. Instanciado pelo game.js quando o quadro
+           fica ativo.
+           Encadeamento Nível 2: Portal (#panel-4) -> Estante (#panel-5)
+           -> COFRE (#panel-6) -> Epílogo (#panel-7).
            ========================================== -->
       <section id="panel-6" class="comic-panel" data-panel="6" style="display: none;">
+        <div class="panel-ribbon">Quadro 2.3 • O Cofre Celestial</div>
+
+        <div id="bubble-q6" class="speech-bubble bubble-princess">
+          O <strong>Cofre das Engrenagens Celestiais</strong>! Preciso alinhar a
+          <strong>Lua Cheia</strong> e a <strong>Ursa Maior</strong> bem no topo.
+        </div>
+
+        <div class="vault-scene">
+          <div class="panel-bg-wrapper">
+            <img src="assets/backgrounds/bg_painel_cofre_domo.jpg" alt="Domo do Observatório Real" class="panel-bg-img"
+                 onerror="this.style.display='none';this.parentNode.classList.add('bg-missing');console.warn('[P5] asset ausente:', this.src, '- usando fundo placeholder. TODO: entregar no lote de assets.');">
+            <div class="panel-light-overlay"></div>
+          </div>
+
+          <div class="vault-frieze" aria-hidden="true">
+            ✦ Alinhe os astros do baile: a lua mais cheia e o Grande Carro do céu ✦
+          </div>
+
+          <!-- Host do componente CelestialVaultPuzzle (montado pelo game.js) -->
+          <div id="celestial-vault-host" class="celestial-vault-host"></div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           QUADRO 5: EPÍLOGO & VITÓRIA DO GRANDE BAILE
+           ========================================== -->
+      <section id="panel-7" class="comic-panel" data-panel="7" style="display: none;">
         <div class="panel-ribbon">Capítulo Final • O Grande Baile</div>
         
         <div class="victory-scene">
@@ -455,6 +491,7 @@
   </main>
 
   <script src="sound-manager.js"></script>
+  <script src="celestial-vault.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

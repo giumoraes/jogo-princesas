@@ -952,6 +952,140 @@ class SoundManager {
   }
 
   // ==========================================================================
+  // ⚙️ COFRE DAS ENGRENAGENS CELESTIAIS (Quadro 2.3 / P5)
+  //    Trio de SFX consumido pelo componente CelestialVaultPuzzle
+  //    (celestial-vault.js). Mantido aqui, no SoundManager consolidado,
+  //    em vez de um terceiro módulo de áudio separado.
+  // ==========================================================================
+
+  /**
+   * Tique metálico curtíssimo de engrenagem de bronze — 1 por detente
+   * enquanto o jogador gira um anel do cofre.
+   * @param {Object} [options]
+   * @param {number} [options.velocity=1] Intensidade relativa (0 a ~1.6).
+   */
+  playGearTick(options = {}) {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const vel = Math.max(0.2, Math.min(1.8, options.velocity || 1));
+
+    // Corpo do clique: ruído branco pré-alocado por um band-pass agudo.
+    if (this.noiseBuffer) {
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.noiseBuffer;
+      const bp = this.ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(2500 + Math.random() * 500, now);
+      bp.Q.value = 7;
+      const ng = this.ctx.createGain();
+      ng.gain.setValueAtTime(0.0001, now);
+      ng.gain.linearRampToValueAtTime(0.10 * vel, now + 0.004);
+      ng.gain.exponentialRampToValueAtTime(0.0006, now + 0.05);
+      src.connect(bp);
+      bp.connect(ng);
+      ng.connect(this.sfxGain);
+      src.start(now);
+      src.stop(now + 0.06);
+    }
+
+    // Micro-blip de dente de engrenagem.
+    const osc = this.ctx.createOscillator();
+    const og = this.ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(900, now);
+    osc.frequency.exponentialRampToValueAtTime(520, now + 0.04);
+    og.gain.setValueAtTime(0.05 * vel, now);
+    og.gain.exponentialRampToValueAtTime(0.0006, now + 0.045);
+    osc.connect(og);
+    og.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }
+
+  /**
+   * "Thunk" de encaixe magnético quando o anel para no detente (snap).
+   */
+  playSnap() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+
+    // Corpo grave com queda rápida de tom.
+    const body = this.ctx.createOscillator();
+    const bg = this.ctx.createGain();
+    body.type = 'triangle';
+    body.frequency.setValueAtTime(300, now);
+    body.frequency.exponentialRampToValueAtTime(92, now + 0.12);
+    bg.gain.setValueAtTime(0.0001, now);
+    bg.gain.linearRampToValueAtTime(0.28, now + 0.008);
+    bg.gain.exponentialRampToValueAtTime(0.0007, now + 0.18);
+    body.connect(bg);
+    bg.connect(this.sfxGain);
+    body.start(now);
+    body.stop(now + 0.2);
+
+    // Brilho de latão por cima.
+    const shine = this.ctx.createOscillator();
+    const sg = this.ctx.createGain();
+    shine.type = 'sine';
+    shine.frequency.setValueAtTime(1340, now);
+    shine.frequency.exponentialRampToValueAtTime(880, now + 0.09);
+    sg.gain.setValueAtTime(0.09, now);
+    sg.gain.exponentialRampToValueAtTime(0.0005, now + 0.12);
+    shine.connect(sg);
+    sg.connect(this.sfxGain);
+    shine.start(now);
+    shine.stop(now + 0.12);
+  }
+
+  /**
+   * Sequência de destravamento do cofre: mecanismo pesado + trinco triplo
+   * acelerando + acorde ascendente de sino + cauda de poeira mágica.
+   */
+  playUnlockVictory() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+
+    // 1. Mecanismo pesado cedendo (assinatura já existente do projeto).
+    if (typeof this.playHeavyLockOpen === 'function') this.playHeavyLockOpen();
+
+    // 2. Trinco triplo de bronze acelerando.
+    setTimeout(() => this.playGearTick({ velocity: 1.2 }), 70);
+    setTimeout(() => this.playGearTick({ velocity: 1.45 }), 180);
+    setTimeout(() => this.playGearTick({ velocity: 1.7 }), 280);
+
+    // 3. Acorde ascendente de sino (Dó maior add9) — o cofre se abre.
+    const chord = [523.25, 659.25, 783.99, 1046.5, 1174.66];
+    chord.forEach((freq, i) => {
+      const t0 = now + 0.3 + i * 0.07;
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(0.2, t0 + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0006, t0 + 1.15);
+      osc.connect(g);
+      g.connect(this.sfxGain);
+      osc.start(t0);
+      osc.stop(t0 + 1.2);
+    });
+
+    // 4. Cauda de poeira mágica.
+    if (typeof this.playSparkleDust === 'function') {
+      setTimeout(() => this.playSparkleDust(), 340);
+    }
+  }
+
+  // ==========================================================================
   // 🎚️ CONTROLES GERAIS DE VOLUME & MUTE
   // ==========================================================================
 
