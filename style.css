@@ -1177,93 +1177,279 @@ html, body {
 }
 
 /* ===================================================
-   QUADRO 5: EPÍLOGO & VITÓRIA
+   QUADRO FINAL: EPÍLOGO — O FLAGRANTE DO PIP (P6)
    =================================================== */
-.victory-scene {
+.epilogue-scene {
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   z-index: 10;
-  padding: 16px;
 }
 
 .panel-bg-img.victory-glow {
-  filter: brightness(0.65) saturate(1.4);
+  filter: brightness(0.72) saturate(1.35);
 }
 
-.victory-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.96);
-  border: 4px solid var(--color-border);
-  border-radius: 28px;
-  padding: 20px 16px;
-  box-shadow: 6px 8px 0 var(--color-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.epilogue-scene .panel-bg-wrapper.bg-missing {
+  background: radial-gradient(circle at 50% 30%, #3a2a63 0%, #1e1430 70%, #140d20 100%);
+}
+
+/* --- Caixa de narração (topo) --- */
+.epilogue-narration {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  right: 10px;
+  z-index: 26;
+  background: linear-gradient(180deg, #fff8e6 0%, #ffedc4 100%);
+  border: 3px solid var(--color-border);
+  border-radius: 14px;
+  padding: 7px 12px;
+  font-family: var(--font-dialog);
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #43301a;
   text-align: center;
-  gap: 10px;
-  z-index: 15;
-  animation: popInBubble 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 3px 3px 0 var(--color-border);
+  animation: popInBubble 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.victory-crown-hero {
-  width: 70px;
-  height: 70px;
-  animation: crownShine 2s infinite ease-in-out;
+/* --- Balões encadeados do desfecho --- */
+.epi-bubble.bubble-princess {
+  top: 116px;
+  right: 12px;
+  max-width: 78%;
 }
 
-.victory-crown-img {
+.speech-bubble.bubble-cat {
+  position: absolute;
+  top: 176px;
+  left: 12px;
+  right: auto;
+  background: #fff;
+  border: 3px solid var(--color-border);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-family: var(--font-dialog);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #2b173b;
+  box-shadow: 3px 3px 0 var(--color-border);
+  z-index: 30;
+  max-width: 70%;
+  animation: popInBubble 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: none;
+}
+
+.speech-bubble.bubble-cat::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 30px;
+  border-width: 0 10px 10px 0;
+  border-style: solid;
+  border-color: transparent #fff;
+  width: 0;
+}
+
+.speech-bubble.bubble-cat::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 28px;
+  border-width: 0 13px 13px 0;
+  border-style: solid;
+  border-color: transparent var(--color-border);
+  width: 0;
+}
+
+/* --- O cofre de bronze aberto em leque --- */
+.bronze-vault-open {
+  position: absolute;
+  left: 50%;
+  bottom: 118px;
+  transform: translateX(-50%);
+  width: 264px;
+  height: 176px;
+  z-index: 12;
+}
+
+.vault-leaf {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 132px;
+  height: 150px;
+  margin-left: -66px;
+  border: 3px solid #6b4a1f;
+  border-radius: 10px 10px 40px 40px / 10px 10px 90px 90px;
+  background: linear-gradient(135deg, #d9a441 0%, #b9822c 45%, #8a5c1c 100%);
+  box-shadow: inset 0 0 14px rgba(88, 54, 12, 0.55);
+  transform-origin: 50% 92%;
+}
+
+.vault-leaf-far-l { transform: rotate(-46deg); filter: brightness(0.8); }
+.vault-leaf-l     { transform: rotate(-22deg); filter: brightness(0.92); }
+.vault-leaf-r     { transform: rotate(22deg);  filter: brightness(0.92); }
+.vault-leaf-far-r { transform: rotate(46deg);  filter: brightness(0.8); }
+
+.vault-velvet {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 168px;
+  height: 118px;
+  border: 3px solid #6b4a1f;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 35%, #2f5db8 0%, #1e3f86 55%, #14295c 100%);
+  box-shadow: inset 0 0 18px rgba(6, 14, 40, 0.7), 4px 5px 0 rgba(46, 29, 61, 0.4);
+  z-index: 3;
+}
+
+/* A Coroa Cerimonial: alvo de toque final */
+.epi-crown {
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  transform: translateX(-50%);
+  width: 78px;
+  height: 62px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.epi-crown-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
+  position: relative;
+  z-index: 2;
 }
 
-.victory-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-purple);
-}
-
-.victory-desc {
-  font-family: var(--font-dialog);
-  font-size: 13.5px;
-  line-height: 1.35;
-  color: #374151;
-}
-
-.victory-characters-row {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin: 6px 0;
-}
-
-.char-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-purple);
-}
-
-.char-badge-img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
+.epi-crown-halo {
+  position: absolute;
+  inset: -18px;
   border-radius: 50%;
-  background: #fdf2f8;
-  border: 2px solid var(--color-border);
-  padding: 2px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.55) 0%, rgba(255, 215, 0, 0) 70%);
+  z-index: 1;
+  opacity: 0;
 }
 
+.epi-crown.epi-crown-hintable .epi-crown-halo {
+  opacity: 1;
+  animation: pulseHalo 0.9s infinite ease-in-out;
+}
+
+.epi-crown.epi-crown-hintable .epi-crown-img {
+  animation: idleBounceAnim 1.4s infinite ease-in-out;
+}
+
+.epi-crown.epi-crown-floated {
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Pip dormindo dentro do cofre, usando a coroa de caminha */
+.epi-cat-sleeping {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: 118px;
+  height: 74px;
+  z-index: 6;
+}
+
+.epi-cat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+.epi-cat-zzz {
+  position: absolute;
+  top: -6px;
+  right: 2px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  animation: idleBounceAnim 2.4s infinite ease-in-out;
+}
+
+/* --- Princesa Aurora (aponta e ri; depois pose triunfante) --- */
+.epi-aurora {
+  position: absolute;
+  left: 4px;
+  bottom: 104px;
+  width: 132px;
+  height: 210px;
+  z-index: 14;
+}
+
+.epi-aurora-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(3px 4px 6px rgba(46, 29, 61, 0.45));
+}
+
+.epi-aurora.epi-aurora-triumph {
+  animation: dressedSpin 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.epi-cat-held {
+  position: absolute;
+  right: -6px;
+  top: 84px;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+/* --- Faixa inferior de conclusão --- */
+.epi-final-banner {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 62px;
+  z-index: 28;
+  background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  padding: 9px 12px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 4px 5px 0 var(--color-border);
+  animation: popInBubble 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.epi-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.epi-banner-sub {
+  font-family: var(--font-dialog);
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-top: 3px;
+  color: #f3e8ff;
+}
+
+/* --- Selo Real (replay) — único "botão" tolerado (Zero-Button UI) --- */
 .royal-seal-replay {
-  margin-top: 4px;
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   border: 3px solid var(--color-border);
   border-radius: 22px;
@@ -1274,10 +1460,11 @@ html, body {
   cursor: pointer;
   box-shadow: 3px 4px 0 var(--color-border);
   transition: transform 0.1s ease;
+  z-index: 30;
 }
 
 .royal-seal-replay:active {
-  transform: scale(0.94);
+  transform: translateX(-50%) scale(0.94);
 }
 
 .replay-seal-icon {
@@ -1359,16 +1546,20 @@ html, body {
 #cat-q1.touch-lift,
 #owl-interactive.touch-lift,
 #pillow-target.touch-lift,
-#hidden-key.touch-lift,
-#royal-seal-replay.touch-lift {
+#hidden-key.touch-lift {
   transform: scale(1.15);
   filter: drop-shadow(0 7px 12px rgba(46, 29, 61, 0.42));
   z-index: 45;
 }
-/* A cama mantém o translateX(-50%) de centragem ao crescer */
+/* A cama e o Selo Real mantêm o translateX(-50%) de centragem ao crescer */
 #bed-interactive.touch-lift {
   transform: translateX(-50%) scale(1.12);
   filter: drop-shadow(0 7px 12px rgba(46, 29, 61, 0.42));
+}
+#royal-seal-replay.touch-lift {
+  transform: translateX(-50%) scale(1.12);
+  filter: drop-shadow(0 7px 12px rgba(46, 29, 61, 0.42));
+  z-index: 45;
 }
 
 /* --- Hitbox tátil mínimo 72x72px (área invisível expandida) --- */

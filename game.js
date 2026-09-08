@@ -63,8 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let celestialVault = null;
   let q6VaultSolved = false;
 
-  // Quadro 5: Epílogo
+  // Quadro Final (P6): Epílogo — O Flagrante do Pip
   const royalSealReplay = document.getElementById('royal-seal-replay');
+  const epiCrownTarget = document.getElementById('epi-crown-target');
+  const epiAuroraEl = document.getElementById('epi-aurora');
+  const epiAuroraImg = document.getElementById('epi-aurora-img');
+  const epiCatHeld = document.getElementById('epi-cat-held');
+  const epiCatSleeping = document.querySelector('#panel-7 .epi-cat-sleeping');
+  const epiBubbles = [
+    document.getElementById('epi-bubble-1'),
+    document.getElementById('epi-bubble-2'),
+    document.getElementById('epi-bubble-3')
+  ];
+  const epiFinalBanner = document.getElementById('epi-final-banner');
+  const EPI_AURORA_IDLE = 'assets/items/princesa_idle_dressed.png';
+  const EPI_AURORA_TRIUMPH = 'assets/items/princesa_happy_celebrate.png';
+  let epiCrownDone = false;
+  let epiTimers = [];
 
   // Canvas de Partículas
   const canvas = document.getElementById('particle-canvas');
@@ -217,6 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Quadro 2.3 (P5): monta/reseta o Cofre das Engrenagens Celestiais ao entrar nele.
     if (index === 5) initCelestialVault();
+    // Quadro Final (P6): dispara a sequência de balões do desfecho ao entrar no Epílogo.
+    if (index === 6) initEpilogue();
   }
 
   // ===================================================
@@ -1384,6 +1401,118 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===================================================
+  // QUADRO FINAL (P6): EPÍLOGO — O FLAGRANTE DO PIP
+  //  Sequência: narração fixa no topo + 3 balões do roteiro encadeados
+  //  por timeout curto. Interação final Zero-Button: tocar na Coroa
+  //  Cerimonial -> ela flutua até a cabeça da Aurora + brilhos +
+  //  Aurora troca para a pose triunfante segurando Pip + faixa
+  //  "CAPÍTULO CONCLUÍDO COM SUCESSO". Idempotente para o replay.
+  // ===================================================
+  function clearEpilogueTimers() {
+    epiTimers.forEach(t => clearTimeout(t));
+    epiTimers = [];
+  }
+
+  function resetEpilogueVisuals() {
+    clearEpilogueTimers();
+    epiCrownDone = false;
+    epiBubbles.forEach(b => { if (b) b.hidden = true; });
+    if (epiFinalBanner) epiFinalBanner.hidden = true;
+    if (epiCrownTarget) {
+      epiCrownTarget.style.transition = '';
+      epiCrownTarget.style.transform = '';
+      epiCrownTarget.classList.remove('epi-crown-floated', 'epi-crown-hintable');
+    }
+    if (epiAuroraImg) epiAuroraImg.src = EPI_AURORA_IDLE;
+    if (epiAuroraEl) epiAuroraEl.classList.remove('epi-aurora-triumph');
+    if (epiCatSleeping) epiCatSleeping.hidden = false;
+    if (epiCatHeld) epiCatHeld.hidden = true;
+  }
+
+  function initEpilogue() {
+    resetEpilogueVisuals();
+    if (!epiCrownTarget) {
+      console.warn('[P6] Epílogo: alvo da Coroa (#epi-crown-target) ausente — interação final indisponível.');
+      return;
+    }
+
+    // Balão 1 (Aurora) -> Balão 2 (Pip) -> Balão 3 (Aurora, convida ao baile).
+    epiTimers.push(setTimeout(() => {
+      if (epiBubbles[0]) epiBubbles[0].hidden = false;
+      if (window.soundManager && window.soundManager.playPop) window.soundManager.playPop();
+    }, 500));
+
+    epiTimers.push(setTimeout(() => {
+      if (epiBubbles[1]) epiBubbles[1].hidden = false;
+      if (window.soundManager && window.soundManager.playMeow) window.soundManager.playMeow();
+    }, 2600));
+
+    epiTimers.push(setTimeout(() => {
+      if (epiBubbles[0]) epiBubbles[0].hidden = true;
+      if (epiBubbles[2]) epiBubbles[2].hidden = false;
+      // A Coroa passa a pulsar convidando ao toque final.
+      epiCrownTarget.classList.add('epi-crown-hintable');
+    }, 4800));
+  }
+
+  if (epiCrownTarget) {
+    epiCrownTarget.addEventListener('pointerdown', () => {
+      if (epiCrownDone) return;
+      epiCrownDone = true;
+      epiCrownTarget.classList.remove('epi-crown-hintable');
+      clearEpilogueTimers();
+      // Garante que a fala final da Aurora seja vista mesmo se o toque
+      // acontecer antes do último timer da sequência de balões.
+      if (epiBubbles[0]) epiBubbles[0].hidden = true;
+      if (epiBubbles[1]) epiBubbles[1].hidden = true;
+      if (epiBubbles[2]) epiBubbles[2].hidden = false;
+      if (window.soundManager) window.soundManager.playMagicChime();
+
+      const panel = panels[6];
+      const canvasRect = canvas.getBoundingClientRect();
+      const crownRect = epiCrownTarget.getBoundingClientRect();
+      const auroraRect = epiAuroraEl.getBoundingClientRect();
+
+      // A Coroa flutua suavemente até a cabeça da Aurora.
+      const dx = (auroraRect.left + auroraRect.width * 0.5) - (crownRect.left + crownRect.width * 0.5);
+      const dy = (auroraRect.top + auroraRect.height * 0.1) - (crownRect.top + crownRect.height * 0.5);
+      epiCrownTarget.classList.add('epi-crown-floated');
+      epiCrownTarget.style.transition = 'transform 1.1s cubic-bezier(0.34, 1.1, 0.5, 1)';
+      // rAF garante que a transição seja aplicada a partir do estado atual.
+      requestAnimationFrame(() => {
+        epiCrownTarget.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) scale(0.66)';
+      });
+
+      // Cascata de brilhos dourados + corações sobre a cabeça da Aurora.
+      epiTimers.push(setTimeout(() => {
+        spawnParticles(
+          auroraRect.left + auroraRect.width * 0.5 - canvasRect.left,
+          auroraRect.top + auroraRect.height * 0.08 - canvasRect.top,
+          46,
+          'star'
+        );
+        if (window.soundManager && window.soundManager.playSparkleDust) window.soundManager.playSparkleDust();
+      }, 850));
+
+      // Aurora assume a pose triunfante segurando Pip.
+      epiTimers.push(setTimeout(() => {
+        if (epiAuroraImg) epiAuroraImg.src = EPI_AURORA_TRIUMPH;
+        if (epiAuroraEl) epiAuroraEl.classList.add('epi-aurora-triumph');
+        if (epiCatSleeping) epiCatSleeping.hidden = true;
+        if (epiCatHeld) epiCatHeld.hidden = false;
+        if (panel) showOnomatopoeia('TCHARAM!', 110, 130, panel);
+      }, 1150));
+
+      // Faixa inferior de conclusão + fanfarra real.
+      epiTimers.push(setTimeout(() => {
+        if (epiFinalBanner) epiFinalBanner.hidden = false;
+        if (window.soundManager) window.soundManager.playRoyalFanfare();
+        spawnParticles(canvas.width * 0.5, canvas.height * 0.78, 40, 'heart');
+      }, 1750));
+    });
+  }
+
+  // ===================================================
   // QUADRO 5: REPLAY ORGÂNICO (SELO REAL)
   // ===================================================
   royalSealReplay.addEventListener('pointerdown', () => {
@@ -1481,7 +1610,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bubbleQ6.innerHTML = 'O <strong>Cofre das Engrenagens Celestiais</strong>! Preciso alinhar a <strong>Lua Cheia</strong> e a <strong>Ursa Maior</strong> bem no topo.';
       }
 
-      // Reset Q5 (Epílogo)
+      // Reset Quadro Final (P6): Epílogo — O Flagrante do Pip
+      resetEpilogueVisuals();
       panels[6].style.display = 'none';
 
       // Volta ao Quadro 1

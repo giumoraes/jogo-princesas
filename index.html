@@ -439,46 +439,82 @@
       </section>
 
       <!-- ==========================================
-           QUADRO 5: EPÍLOGO & VITÓRIA DO GRANDE BAILE
+           QUADRO FINAL: O FLAGRANTE DO PIP (P6 / Executor 13)
+           Desfecho do roteiro — o cofre de bronze aberto em leque, o
+           gatinho Pip dormindo lá dentro usando a Coroa Cerimonial de
+           caminha, e a Princesa Aurora rindo e apontando. Interação
+           final Zero-Button: tocar na Coroa -> ela flutua até a cabeça
+           da Aurora + brilhos + faixa "CAPÍTULO CONCLUÍDO COM SUCESSO".
+           O Selo Real de replay é o único "botão" tolerado (reinicia
+           o jogo do Quadro 1 e reseta todos os quadros).
            ========================================== -->
       <section id="panel-7" class="comic-panel" data-panel="7" style="display: none;">
-        <div class="panel-ribbon">Capítulo Final • O Grande Baile</div>
-        
-        <div class="victory-scene">
+        <div class="panel-ribbon">Capítulo Final • O Flagrante do Pip</div>
+
+        <div class="epilogue-scene">
           <div class="panel-bg-wrapper">
-            <img src="assets/backgrounds/bg_painel_biblioteca_portal.jpg" alt="Baile Real" class="panel-bg-img victory-glow">
+            <img src="assets/backgrounds/bg_painel_cofre_domo.jpg" alt="Salão do Cofre Real" class="panel-bg-img victory-glow"
+                 onerror="this.style.display='none';this.parentNode.classList.add('bg-missing');console.warn('[P6] asset ausente:', this.src, '- usando fundo placeholder. TODO: background do salão do baile no lote de assets.');">
+            <div class="panel-light-overlay"></div>
           </div>
 
-          <div class="victory-card">
-            <div class="victory-crown-hero">
-              <img src="assets/items/item_coroa.png" class="victory-crown-img" alt="Coroa Real Recuperada">
-            </div>
-            
-            <h2 class="victory-title">A Coroa foi Recuperada! 🎉</h2>
-            <p class="victory-desc">
-              Você vestiu a Princesa com o traje oficial, seguiu as patinhas mágicas e abriu o Portal dos Astros decifrando a charada lunar! O Baile Real está salvo!
-            </p>
+          <!-- Caixa de narração (topo) -->
+          <div class="epilogue-narration">
+            Com inteligência, paciência e olhos atentos aos segredos do castelo, o enigma secular foi desfeito!
+          </div>
 
-            <div class="victory-characters-row">
-              <div class="char-badge">
-                <img src="assets/items/item_princesa.png" class="char-badge-img" alt="Princesa">
-                <span>Aurora</span>
-              </div>
-              <div class="char-badge">
-                <img src="assets/items/item_gato.png" class="char-badge-img" alt="Gatinho">
-                <span>Pip</span>
-              </div>
-              <div class="char-badge">
-                <img src="assets/items/item_coruja.png" class="char-badge-img" alt="Coruja">
-                <span>Athena</span>
-              </div>
-            </div>
+          <!-- Balões em sequência (encadeados por timeout curto no game.js) -->
+          <div id="epi-bubble-1" class="speech-bubble bubble-princess epi-bubble" hidden>
+            Pip! Não acredito! Você transformou a relíquia sagrada do reino no seu novo esconderijo de sonecas?!
+          </div>
+          <div id="epi-bubble-2" class="speech-bubble bubble-cat epi-bubble" hidden>
+            Miau... purrrr-purrrr! 🐾
+          </div>
+          <div id="epi-bubble-3" class="speech-bubble bubble-princess epi-bubble" hidden>
+            Venha cá, seu guardião danadinho! Coloque sua coleira de gala porque a música já começou no salão principal... e nós temos um baile inteiro para celebrar!
+          </div>
 
-            <!-- Selo Real Interativo para Reiniciar o Jogo (Zero-Button UI) -->
-            <div id="royal-seal-replay" class="royal-seal-replay" title="Toque no Selo Real para Jogar Novamente">
-              <img src="assets/items/item_coroa.png" class="replay-seal-icon" alt="Jogar de Novo">
-              <span class="label">Jogar Novamente ✨</span>
+          <!-- O COFRE DE BRONZE ABERTO EM LEQUE -->
+          <div class="bronze-vault-open" aria-hidden="true">
+            <div class="vault-leaf vault-leaf-far-l"></div>
+            <div class="vault-leaf vault-leaf-l"></div>
+            <div class="vault-leaf vault-leaf-r"></div>
+            <div class="vault-leaf vault-leaf-far-r"></div>
+
+            <div class="vault-velvet">
+              <!-- A Coroa Cerimonial sobre o veludo azul-safira: ALVO DE TOQUE FINAL -->
+              <div id="epi-crown-target" class="epi-crown" title="Toque na Coroa Cerimonial">
+                <img src="assets/items/item_coroa.png" alt="Coroa Cerimonial" class="epi-crown-img">
+                <span class="epi-crown-halo"></span>
+              </div>
+
+              <!-- Pip dormindo dentro do cofre, usando a coroa de caminha -->
+              <div class="epi-cat-sleeping">
+                <img src="assets/items/gatinho_dormindo.png" alt="Gatinho Pip dormindo no cofre" class="epi-cat-img"
+                     onerror="this.onerror=null;this.src='assets/items/item_gato.png';this.parentNode.classList.add('epi-cat-fallback');console.warn('[P6] asset ausente: gatinho_dormindo.png - usando item_gato.png. TODO: pose do gato dormindo no lote de assets.');">
+                <span class="epi-cat-zzz">Zzz…</span>
+              </div>
             </div>
+          </div>
+
+          <!-- Princesa Aurora: aponta e ri; troca para a pose triunfante ao tocar na coroa -->
+          <div id="epi-aurora" class="epi-aurora">
+            <img id="epi-aurora-img" src="assets/items/princesa_idle_dressed.png" alt="Princesa Aurora rindo" class="epi-aurora-img"
+                 onerror="this.onerror=null;this.src='assets/items/item_princesa.png';console.warn('[P6] asset ausente: princesa_idle_dressed.png - usando item_princesa.png. TODO: pose da Aurora rindo e apontando.');">
+            <!-- Pip no colo da Aurora (visível só na pose triunfante) -->
+            <img id="epi-cat-held" src="assets/items/item_gato.png" alt="Pip no colo da Princesa" class="epi-cat-held" hidden>
+          </div>
+
+          <!-- Faixa inferior de conclusão (revelada ao tocar na coroa) -->
+          <div id="epi-final-banner" class="epi-final-banner" hidden>
+            <div class="epi-banner-title">👑 CAPÍTULO CONCLUÍDO COM SUCESSO! 👑</div>
+            <div class="epi-banner-sub">Você provou ser o mais astuto guardião dos segredos reais!</div>
+          </div>
+
+          <!-- Selo Real Interativo para Reiniciar o Jogo (Zero-Button UI) -->
+          <div id="royal-seal-replay" class="royal-seal-replay" title="Toque no Selo Real para Jogar Novamente">
+            <img src="assets/items/item_coroa.png" class="replay-seal-icon" alt="Jogar de Novo">
+            <span class="label">Jogar Novamente ✨</span>
           </div>
         </div>
       </section>
